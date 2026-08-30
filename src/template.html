@@ -1,0 +1,1075 @@
+<title>Meridian News Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<style>
+/* ============ TOKENS :: dark-first terminal ============ */
+:root{
+  --ground:#0A0E13;
+  --panel:#10161E;
+  --panel-2:#151D27;
+  --rail:#0D131A;
+  --line:#1D2833;
+  --line-soft:#161F29;
+  --ink:#DCE5EE;
+  --ink-2:#93A3B3;
+  --ink-3:#5E6E7E;
+  --amber:#FF9E1B;
+  --amber-dim:#8A5A16;
+  --jade:#2BB673;
+  --jade-dim:#17603D;
+  --live:#FF4D5E;
+  --watch:#D98BD0;
+  --watch-deep:#3A2138;
+  --steel:#6AA6E8;
+  --sel:#1E2A38;
+  --shadow:0 1px 0 rgba(255,255,255,.03) inset;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:light){
+  :root:not([data-theme="dark"]){
+    --ground:#F2F1ED;
+    --panel:#FFFFFF;
+    --panel-2:#FAF9F6;
+    --rail:#EAE8E2;
+    --line:#D8D5CC;
+    --line-soft:#E6E3DB;
+    --ink:#161A1F;
+    --ink-2:#5A6470;
+    --ink-3:#8B95A1;
+    --amber:#B26A00;
+    --amber-dim:#E8C48A;
+    --jade:#0C7A4B;
+    --jade-dim:#A8D6BE;
+    --live:#C2273A;
+    --watch:#8E2F82;
+    --watch-deep:#F3E6F1;
+    --steel:#2C6BB0;
+    --sel:#E4E1D8;
+    --shadow:none;
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --ground:#F2F1ED;
+  --panel:#FFFFFF;
+  --panel-2:#FAF9F6;
+  --rail:#EAE8E2;
+  --line:#D8D5CC;
+  --line-soft:#E6E3DB;
+  --ink:#161A1F;
+  --ink-2:#5A6470;
+  --ink-3:#8B95A1;
+  --amber:#B26A00;
+  --amber-dim:#E8C48A;
+  --jade:#0C7A4B;
+  --jade-dim:#A8D6BE;
+  --live:#C2273A;
+  --watch:#8E2F82;
+  --watch-deep:#F3E6F1;
+  --steel:#2C6BB0;
+  --sel:#E4E1D8;
+  --shadow:none;
+  color-scheme:light;
+}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font-family:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* ============ MASTHEAD ============ */
+.mast{
+  background:var(--panel);
+  border-bottom:1px solid var(--line);box-shadow:var(--shadow);
+}
+.mast-in{
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  padding:10px 16px;
+}
+.brand{display:flex;align-items:baseline;gap:10px;margin-right:auto}
+.brand-mark{
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:700;
+  font-size:19px;letter-spacing:.14em;text-transform:uppercase;
+}
+.brand-mark em{font-style:normal;color:var(--amber)}
+.brand-sub{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink-3);
+}
+.stat-row{display:flex;align-items:center;gap:0;flex-wrap:wrap}
+.stat{
+  padding:0 14px;border-left:1px solid var(--line-soft);
+  font-family:"IBM Plex Mono",monospace;line-height:1.25;
+}
+.stat:first-child{border-left:0}
+.stat-k{display:block;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+.stat-v{display:block;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.stat-v.amber{color:var(--amber)}
+.stat-v.jade{color:var(--jade)}
+.pulse{
+  display:inline-block;width:7px;height:7px;border-radius:50%;
+  background:var(--live);margin-right:6px;vertical-align:middle;
+  animation:blip 2.4s ease-in-out infinite;
+}
+@keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+.theme-btn{
+  background:transparent;border:1px solid var(--line);border-radius:2px;
+  padding:6px 10px;cursor:pointer;font-family:"IBM Plex Mono",monospace;
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);
+}
+.theme-btn:hover{border-color:var(--amber);color:var(--amber)}
+
+/* ============ TAPE ============ */
+.tape{
+  display:flex;align-items:stretch;background:var(--rail);
+  border-bottom:1px solid var(--line);overflow:hidden;position:relative;
+}
+.tape-label{
+  flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:0 14px;
+  background:var(--amber);color:#0A0E13;
+  font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;z-index:2;
+}
+.tape-track{display:flex;overflow:hidden;flex:1;min-width:0}
+.tape-run{
+  display:flex;flex:0 0 auto;align-items:center;gap:0;
+  animation:tape 140s linear infinite;
+}
+.tape:hover .tape-run{animation-play-state:paused}
+@keyframes tape{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tape-item{
+  display:flex;align-items:center;gap:8px;padding:8px 20px;white-space:nowrap;
+  border-right:1px solid var(--line-soft);font-size:12.5px;
+}
+.tape-item .src{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;
+  letter-spacing:.1em;color:var(--amber);
+}
+.tape-item.pk .src{color:var(--jade)}
+.tape-item:hover{background:var(--sel)}
+
+/* ============ CONTROLS ============ */
+.controls{
+  position:sticky;top:0;z-index:30;background:var(--panel-2);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 16px;
+}
+.search-wrap{position:relative;flex:1 1 240px;max-width:340px;min-width:180px}
+.search-wrap::before{
+  content:"⌕";position:absolute;left:9px;top:50%;transform:translateY(-52%);
+  color:var(--ink-3);font-size:15px;
+}
+#search{
+  width:100%;background:var(--ground);border:1px solid var(--line);border-radius:2px;
+  padding:6px 28px 6px 26px;font-family:"IBM Plex Mono",monospace;font-size:12px;
+}
+#search::placeholder{color:var(--ink-3)}
+.kbd{
+  position:absolute;right:7px;top:50%;transform:translateY(-50%);
+  font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink-3);
+  border:1px solid var(--line);border-radius:2px;padding:0 4px;pointer-events:none;
+}
+.grp{display:flex;align-items:center;gap:0;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.grp-k{
+  font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);padding:0 9px;background:var(--rail);
+  align-self:stretch;display:flex;align-items:center;border-right:1px solid var(--line);
+}
+.chip{
+  background:transparent;border:0;border-right:1px solid var(--line-soft);
+  padding:6px 11px;cursor:pointer;color:var(--ink-2);
+  font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.06em;
+  text-transform:uppercase;white-space:nowrap;
+}
+.chip:last-child{border-right:0}
+.chip:hover{background:var(--sel);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--amber);color:#0A0E13;font-weight:600}
+#srcSel{
+  background:var(--ground);border:1px solid var(--line);border-radius:2px;
+  padding:6px 8px;font-family:"IBM Plex Mono",monospace;font-size:11px;max-width:190px;
+}
+.ctrl-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.reset{
+  background:transparent;border:1px solid var(--line);border-radius:2px;
+  padding:6px 11px;cursor:pointer;color:var(--ink-3);
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+}
+.reset:hover{border-color:var(--live);color:var(--live)}
+
+/* ============ BHUTTO-ZARDARI WATCH ============ */
+.watch{border-bottom:1px solid var(--line);background:var(--panel-2)}
+.watch-head{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:9px 16px;border-bottom:1px solid var(--line-soft);
+}
+.watch-rule{width:3px;align-self:stretch;background:var(--watch);border-radius:1px;min-height:22px}
+.watch-name{
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:700;font-size:15px;
+  letter-spacing:.13em;text-transform:uppercase;
+}
+.watch-note{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);
+}
+.watch-head .chip[aria-pressed="true"]{background:var(--watch);color:var(--watch-deep)}
+:root[data-theme="light"] .watch-head .chip[aria-pressed="true"]{color:#FFF}
+@media (prefers-color-scheme:light){
+  :root:not([data-theme="dark"]) .watch-head .chip[aria-pressed="true"]{color:#FFF}
+}
+.watch-split{
+  margin-left:auto;display:flex;align-items:center;gap:12px;
+  font-family:"IBM Plex Mono",monospace;font-size:11px;
+  font-variant-numeric:tabular-nums;color:var(--ink-3);
+}
+.watch-split b{font-weight:600}
+.watch-split .pk{color:var(--jade)}
+.watch-split .intl{color:var(--steel)}
+.watch-toggle{
+  background:transparent;border:1px solid var(--line);border-radius:2px;
+  padding:5px 10px;cursor:pointer;color:var(--ink-3);
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+}
+.watch-toggle:hover{border-color:var(--watch);color:var(--watch)}
+.watch.is-hidden .watch-grid{display:none}
+.watch-grid{display:grid;grid-template-columns:repeat(4,1fr);align-items:start}
+@media (max-width:1280px){.watch-grid{grid-template-columns:repeat(2,1fr)}}
+.watch-col{border-right:1px solid var(--line-soft);min-width:0}
+.watch-col:last-child{border-right:0}
+.wc-head{
+  display:flex;align-items:baseline;gap:8px;padding:8px 14px;
+  border-bottom:1px solid var(--line-soft);background:var(--rail);
+}
+.wc-name{
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:600;font-size:13.5px;
+  letter-spacing:.05em;
+}
+.wc-role{
+  font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);
+}
+.wc-n{
+  margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:11px;
+  font-variant-numeric:tabular-nums;color:var(--watch);font-weight:600;
+}
+.w-row{
+  display:block;padding:8px 14px;border-bottom:1px solid var(--line-soft);
+  border-left:3px solid transparent;cursor:pointer;
+}
+.w-row:hover{background:var(--panel);border-left-color:var(--watch)}
+.w-head{
+  display:block;font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:500;
+  font-size:14px;line-height:1.3;
+}
+.w-row:hover .w-head{color:var(--watch)}
+.w-meta{display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap}
+.w-origin{
+  font-family:"IBM Plex Mono",monospace;font-size:9px;font-weight:600;
+  letter-spacing:.12em;border:1px solid currentColor;border-radius:2px;padding:0 4px;
+}
+.w-origin.PK{color:var(--jade)}
+.w-origin.INTL{color:var(--steel)}
+.w-pub{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink-2);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:16ch;
+}
+.w-time{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;margin-left:auto;
+}
+.w-more{
+  width:100%;background:transparent;border:0;border-bottom:1px solid var(--line-soft);
+  padding:8px;cursor:pointer;color:var(--ink-3);
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+}
+.w-more:hover{color:var(--watch);background:var(--panel)}
+.w-empty{
+  padding:18px 14px;font-family:"IBM Plex Mono",monospace;font-size:11px;
+  color:var(--ink-3);line-height:1.6;
+}
+@media (max-width:860px){
+  .watch-grid{grid-template-columns:1fr}
+  .watch-col{border-right:0;border-bottom:1px solid var(--line-soft)}
+  .watch-split{width:100%;margin-left:0}
+}
+
+/* ============ DAILY BRIEF ============ */
+.brief-btn{
+  display:flex;align-items:center;gap:7px;background:var(--amber);color:#0A0E13;
+  border:0;border-radius:2px;padding:6px 13px;cursor:pointer;
+  font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;
+}
+.brief-btn:hover{filter:brightness(1.12)}
+.brief-btn .dot{width:6px;height:6px;border-radius:50%;background:#0A0E13;opacity:.55}
+.brief-btn.stale .dot{background:var(--live);opacity:1}
+
+.brief-scrim{
+  position:fixed;inset:0;z-index:60;background:rgba(4,7,10,.72);
+  display:flex;justify-content:center;padding:24px 16px;overflow-y:auto;
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);
+}
+:root[data-theme="light"] .brief-scrim{background:rgba(40,38,32,.55)}
+@media (prefers-color-scheme:light){
+  :root:not([data-theme="dark"]) .brief-scrim{background:rgba(40,38,32,.55)}
+}
+.brief-card{
+  width:100%;max-width:700px;background:var(--panel);border:1px solid var(--line);
+  align-self:flex-start;
+}
+.brief-top{
+  position:sticky;top:0;z-index:2;background:var(--panel);
+  border-bottom:1px solid var(--line);padding:14px 22px;
+  display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+}
+.brief-title{
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:700;font-size:18px;
+  letter-spacing:.15em;text-transform:uppercase;
+}
+.brief-stamp{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);
+}
+.brief-stamp b{color:var(--ink-2);font-weight:500}
+.brief-close{
+  margin-left:auto;background:transparent;border:1px solid var(--line);border-radius:2px;
+  padding:5px 11px;cursor:pointer;color:var(--ink-2);
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+}
+.brief-close:hover{border-color:var(--live);color:var(--live)}
+.brief-body{padding:4px 22px 22px}
+.bs{padding:20px 0;border-bottom:1px solid var(--line-soft)}
+.bs:last-child{border-bottom:0}
+.bs-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.bs-rule{width:3px;height:18px;border-radius:1px;background:var(--ink-3)}
+.bs.world .bs-rule{background:var(--amber)}
+.bs.pakistan .bs-rule{background:var(--jade)}
+.bs.person .bs-rule{background:var(--watch)}
+.bs-name{
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:700;font-size:15px;
+  letter-spacing:.12em;text-transform:uppercase;
+}
+.bs-n{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);
+}
+.bs p{
+  margin:0 0 11px;font-size:14.5px;line-height:1.65;color:var(--ink);
+}
+.bs p:last-of-type{margin-bottom:0}
+.bs-quiet{color:var(--ink-3);font-style:italic}
+.bs-refs{margin-top:12px;display:flex;flex-direction:column;gap:5px}
+.bs-refs-k{
+  font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:2px;
+}
+.bs-ref{
+  display:flex;gap:8px;align-items:baseline;font-size:12.5px;color:var(--ink-2);
+  line-height:1.4;
+}
+.bs-ref:hover{color:var(--amber)}
+.bs.person .bs-ref:hover{color:var(--watch)}
+.bs.pakistan .bs-ref:hover{color:var(--jade)}
+.bs-ref .src{
+  font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.08em;
+  color:var(--ink-3);white-space:nowrap;flex:0 0 auto;min-width:9ch;
+}
+.brief-mode{
+  margin:14px 0 0;padding:10px 12px;border-left:2px solid var(--ink-3);
+  background:var(--rail);color:var(--ink-2);font-size:12.5px;line-height:1.55;
+}
+.brief-none{padding:34px 22px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace;
+  font-size:12px;line-height:1.8}
+@media (max-width:640px){
+  .brief-scrim{padding:0}
+  .brief-card{max-width:none;border:0;min-height:100%}
+  .brief-body{padding:4px 16px 22px}
+  .brief-top{padding:12px 16px}
+}
+
+/* ============ DESK GRID ============ */
+.desks{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:start}
+.desk{border-right:1px solid var(--line);min-width:0}
+.desk:last-child{border-right:0}
+.desk-head{
+  position:sticky;top:var(--stick,41px);z-index:20;background:var(--panel);
+  border-bottom:1px solid var(--line);padding:9px 14px;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.desk-rule{width:3px;align-self:stretch;background:var(--amber);border-radius:1px}
+.desk-pk .desk-rule{background:var(--jade)}
+.desk-name{
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:700;font-size:15px;
+  letter-spacing:.13em;text-transform:uppercase;
+}
+.desk-note{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);
+}
+.desk-count{
+  margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:11px;
+  font-variant-numeric:tabular-nums;color:var(--ink-2);
+}
+.desk-count b{color:var(--amber);font-weight:600}
+.desk-pk .desk-count b{color:var(--jade)}
+
+.feed{display:flex;flex-direction:column}
+.row{
+  display:grid;grid-template-columns:56px 1fr;gap:0 10px;
+  padding:9px 14px 9px 11px;border-bottom:1px solid var(--line-soft);
+  border-left:3px solid transparent;cursor:pointer;
+}
+.row:hover{background:var(--panel);border-left-color:var(--line)}
+.row.fresh{border-left-color:var(--amber)}
+.desk-pk .row.fresh{border-left-color:var(--jade)}
+.row.hot{border-left-color:var(--live)}
+.r-time{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;padding-top:2px;text-align:right;
+}
+.row.hot .r-time{color:var(--live);font-weight:600}
+.r-main{min-width:0;display:block}
+.r-head{display:block}
+.r-head{
+  display:block;font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:500;
+  font-size:15.5px;line-height:1.3;text-wrap:balance;
+}
+.row:hover .r-head{color:var(--amber)}
+.desk-pk .row:hover .r-head{color:var(--jade)}
+.r-meta{display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap}
+.r-src{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:600;
+  letter-spacing:.09em;color:var(--ink-2);border:1px solid var(--line);
+  border-radius:2px;padding:0 5px;
+}
+.r-topic{
+  font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);
+}
+.r-topic::before{content:"▪ ";color:var(--ink-3)}
+.r-topic.politics::before{color:var(--amber)}
+.r-topic.business::before{color:var(--jade)}
+.r-topic.tech::before{color:var(--steel)}
+.r-sum{
+  font-size:12.5px;color:var(--ink-2);margin-top:4px;
+  display:none;max-width:64ch;
+}
+.row:hover .r-sum,.row:focus-within .r-sum{display:block}
+body.compact .r-sum{display:none!important}
+body.compact .row{padding:5px 14px 5px 11px}
+body.compact .r-head{font-size:14px}
+body.compact .r-meta{margin-top:2px}
+
+.empty{padding:40px 16px;text-align:center;color:var(--ink-3);font-family:"IBM Plex Mono",monospace;font-size:12px}
+.more{
+  width:100%;background:var(--rail);border:0;border-top:1px solid var(--line);
+  padding:11px;cursor:pointer;color:var(--ink-2);
+  font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+}
+.more:hover{color:var(--amber);background:var(--panel)}
+
+/* ============ FOOTER ============ */
+.foot{
+  border-top:1px solid var(--line);background:var(--panel);
+  padding:14px 16px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-3);
+  letter-spacing:.06em;
+}
+.foot b{color:var(--ink-2);font-weight:500}
+
+/* ============ RESPONSIVE ============ */
+.desk-switch{display:none}
+@media (max-width:860px){
+  .desks{grid-template-columns:1fr}
+  .desk{border-right:0;border-bottom:1px solid var(--line)}
+  .desk-switch{
+    display:flex;position:sticky;top:0;z-index:31;background:var(--panel-2);
+    border-bottom:1px solid var(--line);
+  }
+  .desk-switch button{
+    flex:1;background:transparent;border:0;border-bottom:2px solid transparent;
+    padding:10px;cursor:pointer;color:var(--ink-2);
+    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  }
+  .desk-switch button[aria-pressed="true"]{color:var(--ink);border-bottom-color:var(--amber)}
+  .desk-switch button[data-desk="PAKISTAN"][aria-pressed="true"]{border-bottom-color:var(--jade)}
+  body.mobile .desk[hidden]{display:none}
+  .desk-head{top:var(--stick,38px)}
+  .controls{position:static}
+  .stat-row{width:100%;overflow-x:auto}
+  .r-sum{display:none!important}
+}
+@media (prefers-reduced-motion:reduce){
+  .tape-run{animation:none}
+  .pulse{animation:none}
+}
+</style>
+
+<header class="mast">
+  <div class="mast-in">
+    <div class="brand">
+      <span class="brand-mark">Meridian<em>·</em>Desk</span>
+      <span class="brand-sub">Global &amp; Pakistan Wire</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat"><span class="stat-k">Headlines</span><span class="stat-v" id="sTotal">—</span></span>
+      <span class="stat"><span class="stat-k">World</span><span class="stat-v amber" id="sWorld">—</span></span>
+      <span class="stat"><span class="stat-k">Pakistan</span><span class="stat-v jade" id="sPak">—</span></span>
+      <span class="stat"><span class="stat-k">Sources</span><span class="stat-v" id="sSrc">—</span></span>
+      <span class="stat"><span class="stat-k">BZ watch 24h</span><span class="stat-v" id="sWatch" style="color:var(--watch)">—</span></span>
+      <span class="stat"><span class="stat-k">Last pull</span><span class="stat-v" id="sPull">—</span></span>
+      <span class="stat"><span class="stat-k">Karachi</span><span class="stat-v" id="sClock">—</span></span>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">Light</button>
+  </div>
+</header>
+
+<div class="tape" aria-label="Latest headlines ticker">
+  <div class="tape-label"><span class="pulse"></span>Live</div>
+  <div class="tape-track"><div class="tape-run" id="tapeRun"></div></div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <input id="search" type="search" placeholder="Filter headlines…" autocomplete="off" aria-label="Search headlines">
+    <span class="kbd">/</span>
+  </div>
+  <div class="grp" role="group" aria-label="Topic">
+    <span class="grp-k">Beat</span>
+    <button class="chip" data-topic="all" aria-pressed="true" type="button">All</button>
+    <button class="chip" data-topic="politics" aria-pressed="false" type="button">Politics</button>
+    <button class="chip" data-topic="business" aria-pressed="false" type="button">Business</button>
+    <button class="chip" data-topic="tech" aria-pressed="false" type="button">Tech</button>
+  </div>
+  <div class="grp" role="group" aria-label="Time window">
+    <span class="grp-k">Window</span>
+    <button class="chip" data-win="1" aria-pressed="false" type="button">1h</button>
+    <button class="chip" data-win="6" aria-pressed="false" type="button">6h</button>
+    <button class="chip" data-win="24" aria-pressed="false" type="button">24h</button>
+    <button class="chip" data-win="0" aria-pressed="true" type="button">All</button>
+  </div>
+  <div class="grp">
+    <span class="grp-k">Source</span>
+    <select id="srcSel" aria-label="Filter by source"><option value="all">All sources</option></select>
+  </div>
+  <div class="ctrl-right">
+    <button class="brief-btn" id="briefBtn" type="button" aria-haspopup="dialog">
+      <span class="dot"></span>Summary
+    </button>
+    <div class="grp" role="group" aria-label="Density">
+      <button class="chip" id="densityBtn" aria-pressed="false" type="button">Compact</button>
+    </div>
+    <button class="reset" id="resetBtn" type="button">Reset</button>
+  </div>
+</div>
+
+<section class="watch" id="watch">
+  <div class="watch-head">
+    <span class="watch-rule"></span>
+    <span class="watch-name">Bhutto&ndash;Zardari Watch</span>
+    <span class="watch-note">Pakistani &amp; international media</span>
+    <div class="grp" role="group" aria-label="Watch window">
+      <span class="grp-k">Window</span>
+      <button class="chip" data-wwin="24" aria-pressed="true" type="button">24h</button>
+      <button class="chip" data-wwin="168" aria-pressed="false" type="button">7d</button>
+    </div>
+    <div class="watch-split">
+      <span>Pakistani <b class="pk" id="wPK">0</b></span>
+      <span>International <b class="intl" id="wINTL">0</b></span>
+      <button class="watch-toggle" id="wCollapse" type="button">Hide</button>
+    </div>
+  </div>
+  <div class="watch-grid" id="watchGrid"></div>
+</section>
+
+<div class="desk-switch" role="group" aria-label="Desk">
+  <button data-desk="WORLD" aria-pressed="true" type="button">World Desk</button>
+  <button data-desk="PAKISTAN" aria-pressed="false" type="button">Pakistan Desk</button>
+</div>
+
+<main class="desks">
+  <section class="desk desk-world" data-desk="WORLD">
+    <div class="desk-head">
+      <span class="desk-rule"></span>
+      <span class="desk-name">World Desk</span>
+      <span class="desk-note">Wires · Broadsheets · Tech</span>
+      <span class="desk-count"><b id="cWorld">0</b> shown</span>
+    </div>
+    <div class="feed" id="feedWORLD"></div>
+  </section>
+  <section class="desk desk-pk" data-desk="PAKISTAN">
+    <div class="desk-head">
+      <span class="desk-rule"></span>
+      <span class="desk-name">Pakistan Desk</span>
+      <span class="desk-note">National · Global coverage</span>
+      <span class="desk-count"><b id="cPak">0</b> shown</span>
+    </div>
+    <div class="feed" id="feedPAKISTAN"></div>
+  </section>
+</main>
+
+<div class="brief-scrim" id="briefScrim" role="dialog" aria-modal="true" aria-labelledby="briefTitle" hidden>
+  <div class="brief-card">
+    <div class="brief-top">
+      <span class="brief-title" id="briefTitle">Daily Brief</span>
+      <span class="brief-stamp" id="briefStamp">&mdash;</span>
+      <button class="brief-close" id="briefClose" type="button">Close &middot; Esc</button>
+    </div>
+    <div id="briefBody"></div>
+  </div>
+</div>
+
+<footer class="foot">
+  <span>Pull <b id="fPull">—</b></span>
+  <span>Next refresh <b id="fNext">—</b></span>
+  <span>Feeds <b id="fFeeds">—</b></span>
+  <span>Window <b>60h rolling</b></span>
+  <span>Brief <b id="fBrief">&mdash;</b></span>
+  <span style="margin-left:auto">Headlines link to their publisher. Meridian stores nothing and ranks nothing — strict reverse chronology.</span>
+</footer>
+
+<script>
+/*__SUMMARY_START__*/
+const SUMMARY = null;
+/*__SUMMARY_END__*/
+
+/*__NEWS_DATA_START__*/
+const NEWS_DATA = {"generated":"1970-01-01T00:00:00Z","counts":{"total":0,"world":0,"pakistan":0,"sources":0,"feeds_ok":0,"feeds_total":0},"items":[]};
+/*__NEWS_DATA_END__*/
+
+(function(){
+  "use strict";
+  const ITEMS = NEWS_DATA.items.map(function(i){
+    return {t:i.t,u:i.u,s:i.s,c:i.c,d:i.d,k:i.k,x:i.x||"",p:i.p||"",
+            w:i.w||[],o:i.o||"INTL",ms:i.ts?Date.parse(i.ts):0,
+            q:(i.t+" "+i.s+" "+(i.p||"")+" "+(i.x||"")).toLowerCase()};
+  });
+  const PULL_MS = Date.parse(NEWS_DATA.generated);
+  const PAGE = 60;
+
+  const state = {topic:"all", win:0, src:"all", q:"", shown:{WORLD:PAGE, PAKISTAN:PAGE},
+                 desk:"WORLD", wwin:24, wopen:{AAZ:false,PRES:false,BBZ:false,ABZ:false}};
+
+  const PRINCIPALS = [
+    {k:"AAZ",  name:"Asif Ali Zardari",       role:"PPP co-chairman & politics"},
+    {k:"PRES", name:"The Presidency",         role:"Aiwan-e-Sadr & official acts"},
+    {k:"BBZ",  name:"Bilawal Bhutto Zardari", role:"PPP chairman"},
+    {k:"ABZ",  name:"Aseefa Bhutto Zardari",  role:"First Lady"}
+  ];
+
+  /* ---- persisted prefs (per-viewer convenience only) ---- */
+  function loadPrefs(){
+    try{
+      const raw = localStorage.getItem("meridian.prefs");
+      if(!raw) return;
+      const p = JSON.parse(raw);
+      if(p.topic) state.topic = p.topic;
+      if(typeof p.win === "number") state.win = p.win;
+      if(typeof p.wwin === "number") state.wwin = p.wwin;
+      if(p.watchHidden) document.getElementById("watch").classList.add("is-hidden");
+      if(p.theme) document.documentElement.setAttribute("data-theme", p.theme);
+      if(p.compact) document.body.classList.add("compact");
+    }catch(e){}
+  }
+  function savePrefs(){
+    try{
+      localStorage.setItem("meridian.prefs", JSON.stringify({
+        topic:state.topic, win:state.win, wwin:state.wwin,
+        watchHidden:document.getElementById("watch").classList.contains("is-hidden"),
+        theme:document.documentElement.getAttribute("data-theme")||"",
+        compact:document.body.classList.contains("compact")
+      }));
+    }catch(e){}
+  }
+
+  /* ---- time helpers ---- */
+  function ago(ms){
+    if(!ms) return "—";
+    const m = Math.max(0, Math.round((Date.now()-ms)/60000));
+    if(m < 1) return "now";
+    if(m < 60) return m+"m";
+    const h = Math.floor(m/60);
+    if(h < 24) return h+"h"+(m%60?String(m%60).padStart(2,"0"):"");
+    return Math.floor(h/24)+"d";
+  }
+  function pkTime(ms){
+    return new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Karachi",hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date(ms));
+  }
+  function pkStamp(ms){
+    return new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Karachi",day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date(ms))+" PKT";
+  }
+
+  /* ---- filtering ---- */
+  function pass(it){
+    if(state.topic !== "all" && it.k !== state.topic) return false;
+    if(state.src !== "all" && it.s !== state.src) return false;
+    if(state.win && it.ms && (Date.now()-it.ms) > state.win*3600000) return false;
+    if(state.q && it.q.indexOf(state.q) === -1) return false;
+    return true;
+  }
+
+  const esc = (function(){
+    const d = document.createElement("div");
+    return function(s){ d.textContent = s; return d.innerHTML; };
+  })();
+
+  function rowHTML(it){
+    const age = Date.now() - it.ms;
+    const cls = age < 3600000 ? "row hot" : (age < 10800000 ? "row fresh" : "row");
+    return '<a class="'+cls+'" href="'+esc(it.u)+'" target="_blank" rel="noopener noreferrer">'
+      + '<span class="r-time" title="'+esc(pkStamp(it.ms))+'">'+ago(it.ms)+'</span>'
+      + '<span class="r-main">'
+      + '<span class="r-head">'+esc(it.t)+'</span>'
+      + '<span class="r-meta"><span class="r-src">'+esc(it.c)+'</span>'
+      + '<span class="r-topic '+it.k+'">'+it.k+'</span>'
+      + '<span class="r-topic" style="letter-spacing:.05em">'+esc(it.s)+'</span></span>'
+      + (it.x ? '<span class="r-sum">'+esc(it.x)+'</span>' : '')
+      + '</span></a>';
+  }
+
+  function renderDesk(desk){
+    const list = ITEMS.filter(function(i){ return i.d === desk && pass(i); });
+    const el = document.getElementById("feed"+desk);
+    const n = Math.min(state.shown[desk], list.length);
+    if(!list.length){
+      el.innerHTML = '<div class="empty">No headlines match this filter.</div>';
+    }else{
+      let html = "";
+      for(let i=0;i<n;i++) html += rowHTML(list[i]);
+      if(n < list.length){
+        html += '<button class="more" data-desk="'+desk+'" type="button">Load '+Math.min(PAGE, list.length-n)+' more · '+(list.length-n)+' held</button>';
+      }
+      el.innerHTML = html;
+    }
+    document.getElementById(desk === "WORLD" ? "cWorld" : "cPak").textContent = list.length;
+  }
+
+/* ---- daily brief ---- */
+  const BRIEF_ACCENT = {WORLD:"world", PAKISTAN:"pakistan"};
+
+  function briefAgeHours(){
+    if(!SUMMARY || !SUMMARY.written) return null;
+    return (Date.now() - Date.parse(SUMMARY.written)) / 3600000;
+  }
+
+  function renderBrief(){
+    const body = document.getElementById("briefBody");
+    const stamp = document.getElementById("briefStamp");
+    if(!SUMMARY || !SUMMARY.sections || !SUMMARY.sections.length){
+      stamp.textContent = "not yet written";
+      body.innerHTML = '<div class="brief-none">No brief has been written yet.<br><br>'
+        + 'A brief covering the previous 24 hours is produced on each scheduled rebuild.'
+        + '<br>The next one will appear here automatically.</div>';
+      return;
+    }
+    const age = briefAgeHours();
+    const auto = SUMMARY.mode === "auto";
+    stamp.innerHTML = (auto ? 'Assembled <b>' : 'Written <b>') + pkStamp(Date.parse(SUMMARY.written)) + '</b>'
+      + ' &middot; covering <b>' + (SUMMARY.window_hours || 24) + 'h</b>'
+      + ' &middot; <b>' + (age < 1 ? "just now" : Math.round(age) + "h old") + '</b>';
+
+    let html = '<div class="brief-body">';
+    if(auto){
+      html += '<p class="brief-mode">Assembled from the coverage itself, not written. '
+            + 'Each section leads with the story the most outlets carried independently, '
+            + 'because corroboration is the one quality signal available without editorial '
+            + 'judgement. Single-source items are flagged as unconfirmed.</p>';
+    }
+    for(const s of SUMMARY.sections){
+      const cls = BRIEF_ACCENT[s.k] || "person";
+      html += '<section class="bs '+cls+'">'
+            + '<div class="bs-head"><span class="bs-rule"></span>'
+            + '<span class="bs-name">'+esc(s.label)+'</span>'
+            + (s.note ? '<span class="bs-n">'+esc(s.note)+'</span>' : '')
+            + '</div>';
+      const paras = (s.body && s.body.length) ? s.body : [];
+      if(paras.length){
+        for(const p of paras) html += '<p>'+esc(p)+'</p>';
+      }else{
+        html += '<p class="bs-quiet">Nothing of substance in this window.</p>';
+      }
+      if(s.refs && s.refs.length){
+        html += '<div class="bs-refs"><span class="bs-refs-k">Drawn from</span>';
+        for(const r of s.refs){
+          html += '<a class="bs-ref" href="'+esc(r.u)+'" target="_blank" rel="noopener noreferrer">'
+                + '<span class="src">'+esc(r.s||"")+'</span><span>'+esc(r.t)+'</span></a>';
+        }
+        html += '</div>';
+      }
+      html += '</section>';
+    }
+    body.innerHTML = html + '</div>';
+  }
+
+  let briefReturnFocus = null;
+  function openBrief(){
+    renderBrief();
+    const scrim = document.getElementById("briefScrim");
+    briefReturnFocus = document.activeElement;
+    scrim.hidden = false;
+    document.body.style.overflow = "hidden";
+    document.getElementById("briefClose").focus();
+  }
+  function closeBrief(){
+    document.getElementById("briefScrim").hidden = true;
+    document.body.style.overflow = "";
+    if(briefReturnFocus && briefReturnFocus.focus) briefReturnFocus.focus();
+  }
+
+  function markBriefFreshness(){
+    const age = briefAgeHours();
+    // Briefs land every ~13 hours at the widest gap; past 15 it is overdue.
+    document.getElementById("briefBtn").classList.toggle("stale", age === null || age > 15);
+  }
+
+  /* ---- Bhutto-Zardari watch ---- */
+  function watchItems(){
+    const cutoff = Date.now() - state.wwin*3600000;
+    return ITEMS.filter(function(i){
+      if(!i.w.length || !i.ms || i.ms < cutoff) return false;
+      if(state.q && i.q.indexOf(state.q) === -1) return false;
+      return true;
+    }).sort(function(a,b){ return b.ms - a.ms; });
+  }
+
+  function wRowHTML(it){
+    return '<a class="w-row" href="'+esc(it.u)+'" target="_blank" rel="noopener noreferrer">'
+      + '<span class="w-head">'+esc(it.t)+'</span>'
+      + '<span class="w-meta">'
+      + '<span class="w-origin '+it.o+'">'+(it.o === "PK" ? "PK" : "INTL")+'</span>'
+      + '<span class="w-pub" title="'+esc(it.p || it.s)+'">'+esc(it.p || it.s)+'</span>'
+      + '<span class="w-time" title="'+esc(pkStamp(it.ms))+'">'+ago(it.ms)+'</span>'
+      + '</span></a>';
+  }
+
+  function renderWatch(){
+    const list = watchItems();
+    const grid = document.getElementById("watchGrid");
+    let html = "";
+    for(const p of PRINCIPALS){
+      const mine = list.filter(function(i){ return i.w.indexOf(p.k) !== -1; });
+      html += '<div class="watch-col">'
+            + '<div class="wc-head"><span class="wc-name">'+p.name+'</span>'
+            + '<span class="wc-role">'+p.role+'</span>'
+            + '<span class="wc-n">'+mine.length+'</span></div><div class="wc-body">';
+      if(mine.length){
+        const cap = state.wopen[p.k] ? mine.length : 5;
+        html += mine.slice(0, cap).map(wRowHTML).join("");
+        if(mine.length > cap){
+          html += '<button class="w-more" data-wopen="'+p.k+'" type="button">Show '
+                + (mine.length - cap) + ' more</button>';
+        }
+      }else{
+        html += '<div class="w-empty">'+(p.k === "PRES" ? "No presidential business reported" : "No coverage naming "+p.name)
+              + ' in the last '+(state.wwin === 24 ? "24 hours" : "7 days")+'.'
+              + (state.wwin === 24 ? '<br>Try the 7d window.' : '')
+              + '</div>';
+      }
+      html += '</div></div>';
+    }
+    grid.innerHTML = html;
+    document.getElementById("wPK").textContent = list.filter(function(i){ return i.o === "PK"; }).length;
+    document.getElementById("wINTL").textContent = list.filter(function(i){ return i.o === "INTL"; }).length;
+    document.querySelectorAll("[data-wwin]").forEach(function(b){
+      b.setAttribute("aria-pressed", String(Number(b.dataset.wwin) === state.wwin));
+    });
+  }
+
+  function render(){
+    renderDesk("WORLD");
+    renderDesk("PAKISTAN");
+    renderWatch();
+  }
+
+  function buildTape(){
+    const w = ITEMS.filter(function(i){ return i.d === "WORLD"; }).slice(0,12);
+    const p = ITEMS.filter(function(i){ return i.d === "PAKISTAN"; }).slice(0,12);
+    const top = [];
+    for(let i=0;i<12;i++){ if(w[i]) top.push(w[i]); if(p[i]) top.push(p[i]); }
+    let html = "";
+    for(const it of top){
+      html += '<a class="tape-item'+(it.d==="PAKISTAN"?" pk":"")+'" href="'+esc(it.u)+'" target="_blank" rel="noopener noreferrer">'
+            + '<span class="src mono">'+esc(it.c)+'</span><span>'+esc(it.t)+'</span>'
+            + '<span class="mono" style="font-size:10px;color:var(--ink-3)">'+ago(it.ms)+'</span></a>';
+    }
+    document.getElementById("tapeRun").innerHTML = html + html;
+  }
+
+  function buildSources(){
+    const names = Array.from(new Set(ITEMS.map(function(i){ return i.s; }))).sort();
+    const sel = document.getElementById("srcSel");
+    for(const n of names){
+      const o = document.createElement("option");
+      o.value = n; o.textContent = n;
+      sel.appendChild(o);
+    }
+  }
+
+  function syncChips(){
+    document.querySelectorAll("[data-topic]").forEach(function(b){
+      b.setAttribute("aria-pressed", String(b.dataset.topic === state.topic));
+    });
+    document.querySelectorAll("[data-win]").forEach(function(b){
+      b.setAttribute("aria-pressed", String(Number(b.dataset.win) === state.win));
+    });
+  }
+
+  function resetPages(){ state.shown.WORLD = PAGE; state.shown.PAKISTAN = PAGE; }
+
+  /* ---- header stats ---- */
+  function stats(){
+    document.getElementById("sTotal").textContent = NEWS_DATA.counts.total;
+    document.getElementById("sWorld").textContent = NEWS_DATA.counts.world;
+    document.getElementById("sPak").textContent = NEWS_DATA.counts.pakistan;
+    document.getElementById("sSrc").textContent = NEWS_DATA.counts.sources;
+    document.getElementById("sWatch").textContent = NEWS_DATA.counts.watch24 != null ? NEWS_DATA.counts.watch24 : "—";
+    const a = ago(PULL_MS);
+    document.getElementById("sPull").textContent = (a === "now" ? "just now" : a + " ago");
+    document.getElementById("fPull").textContent = pkStamp(PULL_MS);
+    document.getElementById("fNext").textContent = pkStamp(PULL_MS + 3600000);
+    document.getElementById("fFeeds").textContent = NEWS_DATA.counts.feeds_ok+"/"+NEWS_DATA.counts.feeds_total+" responding";
+    const fb = document.getElementById("fBrief");
+    if(fb) fb.textContent = SUMMARY && SUMMARY.written
+      ? (SUMMARY.mode === "auto" ? "assembled " : "written ") + pkStamp(Date.parse(SUMMARY.written))
+      : "not yet written";
+  }
+  function clock(){ document.getElementById("sClock").textContent = pkTime(Date.now()); }
+
+  /* ---- events ---- */
+  document.addEventListener("click", function(e){
+    const wmore = e.target.closest("[data-wopen]");
+    if(wmore){ state.wopen[wmore.dataset.wopen] = true; renderWatch(); return; }
+    const wchip = e.target.closest("[data-wwin]");
+    if(wchip){
+      state.wwin = Number(wchip.dataset.wwin);
+      state.wopen = {AAZ:false,PRES:false,BBZ:false,ABZ:false};
+      renderWatch(); savePrefs(); return;
+    }
+    const chip = e.target.closest("[data-topic],[data-win]");
+    if(chip){
+      if(chip.dataset.topic) state.topic = chip.dataset.topic;
+      else state.win = Number(chip.dataset.win);
+      syncChips(); resetPages(); render(); savePrefs(); return;
+    }
+    const more = e.target.closest(".more");
+    if(more){ state.shown[more.dataset.desk] += PAGE; render(); return; }
+    const tab = e.target.closest(".desk-switch button");
+    if(tab){
+      state.desk = tab.dataset.desk;
+      document.querySelectorAll(".desk-switch button").forEach(function(b){
+        b.setAttribute("aria-pressed", String(b.dataset.desk === state.desk));
+      });
+      document.querySelectorAll("main .desk").forEach(function(d){
+        d.hidden = (d.dataset.desk !== state.desk);
+      });
+    }
+  });
+
+  let timer;
+  document.getElementById("search").addEventListener("input", function(e){
+    clearTimeout(timer);
+    const v = e.target.value.trim().toLowerCase();
+    timer = setTimeout(function(){ state.q = v; resetPages(); render(); }, 130);
+  });
+
+  document.getElementById("srcSel").addEventListener("change", function(e){
+    state.src = e.target.value; resetPages(); render();
+  });
+
+  document.getElementById("briefBtn").addEventListener("click", openBrief);
+  document.getElementById("briefClose").addEventListener("click", closeBrief);
+  document.getElementById("briefScrim").addEventListener("click", function(e){
+    if(e.target === e.currentTarget) closeBrief();
+  });
+
+  document.getElementById("wCollapse").addEventListener("click", function(e){
+    const hidden = document.getElementById("watch").classList.toggle("is-hidden");
+    e.currentTarget.textContent = hidden ? "Show" : "Hide";
+    savePrefs();
+  });
+
+  document.getElementById("densityBtn").addEventListener("click", function(e){
+    const on = document.body.classList.toggle("compact");
+    e.currentTarget.setAttribute("aria-pressed", String(on));
+    savePrefs();
+  });
+
+  document.getElementById("themeBtn").addEventListener("click", function(){
+    const root = document.documentElement;
+    const cur = root.getAttribute("data-theme");
+    const isLight = cur === "light" ||
+      (!cur && window.matchMedia("(prefers-color-scheme: light)").matches);
+    root.setAttribute("data-theme", isLight ? "dark" : "light");
+    setThemeLabel(); savePrefs();
+  });
+  function setThemeLabel(){
+    const cur = document.documentElement.getAttribute("data-theme");
+    const isLight = cur === "light" ||
+      (!cur && window.matchMedia("(prefers-color-scheme: light)").matches);
+    document.getElementById("themeBtn").textContent = isLight ? "Dark" : "Light";
+  }
+
+  document.getElementById("resetBtn").addEventListener("click", function(){
+    state.topic="all"; state.win=0; state.src="all"; state.q="";
+    document.getElementById("search").value=""; document.getElementById("srcSel").value="all";
+    syncChips(); resetPages(); render(); savePrefs();
+  });
+
+  document.addEventListener("keydown", function(e){
+    const briefOpen = !document.getElementById("briefScrim").hidden;
+    if(e.key === "Escape" && briefOpen){ closeBrief(); return; }
+    if(briefOpen) return;
+    if(e.key === "s" && document.activeElement.id !== "search"){
+      e.preventDefault(); openBrief(); return;
+    }
+    if(e.key === "/" && document.activeElement.id !== "search"){
+      e.preventDefault(); document.getElementById("search").focus();
+    }else if(e.key === "Escape" && document.activeElement.id === "search"){
+      document.activeElement.value=""; state.q=""; resetPages(); render();
+    }
+  });
+
+  function applyMobile(){
+    const m = window.matchMedia("(max-width:860px)").matches;
+    document.body.classList.toggle("mobile", m);
+    document.querySelectorAll("main .desk").forEach(function(d){
+      d.hidden = m ? (d.dataset.desk !== state.desk) : false;
+    });
+  }
+  window.addEventListener("resize", applyMobile);
+
+  function measureStick(){
+    const m = window.matchMedia("(max-width:860px)").matches;
+    const el = m ? document.querySelector(".desk-switch") : document.querySelector(".controls");
+    const h = el ? Math.round(el.getBoundingClientRect().height) : 40;
+    document.documentElement.style.setProperty("--stick", h+"px");
+  }
+  window.addEventListener("resize", measureStick);
+
+  /* ---- boot ---- */
+  loadPrefs();
+  setThemeLabel();
+  document.getElementById("densityBtn").setAttribute("aria-pressed", String(document.body.classList.contains("compact")));
+  document.getElementById("wCollapse").textContent =
+    document.getElementById("watch").classList.contains("is-hidden") ? "Show" : "Hide";
+  buildSources();
+  buildTape();
+  syncChips();
+  stats();
+  clock();
+  markBriefFreshness();
+  render();
+  applyMobile();
+  measureStick();
+  setInterval(clock, 20000);
+  setInterval(function(){ stats(); markBriefFreshness(); render(); }, 60000);
+})();
+</script>

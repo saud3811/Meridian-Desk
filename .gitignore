@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+dist/
+data/news_data.json
+data/summary.json
+data/digest.txt
+.DS_Store
+.venv/
