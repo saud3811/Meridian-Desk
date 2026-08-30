@@ -7,10 +7,10 @@ on:
   workflow_dispatch:        # rebuild on demand from the Actions tab
   push:
     branches: [main]
-    paths-ignore:
-      - "README.md"
-      - "docs/**"
-      - "data/last-run.txt"   # the heartbeat commit must not retrigger this
+    # No paths filter here on purpose. With one, GitHub skips any push that
+    # changes zero files, which makes `git commit --allow-empty` useless as a
+    # manual trigger. The heartbeat commit is kept from looping by the
+    # [skip ci] tag in its commit message instead.
 
 permissions:
   contents: write   # needed only for the heartbeat commit
