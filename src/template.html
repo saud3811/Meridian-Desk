@@ -1,7 +1,7 @@
 <title>Meridian News Desk</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500&family=Noto+Naskh+Arabic:wght@400;600&display=swap">
 <style>
 /* ============ TOKENS :: dark-first terminal ============ */
 :root{
@@ -22,6 +22,7 @@
   --watch:#D98BD0;
   --watch-deep:#3A2138;
   --steel:#6AA6E8;
+  --mena:#4FC3C3;
   --sel:#1E2A38;
   --shadow:0 1px 0 rgba(255,255,255,.03) inset;
   color-scheme:dark;
@@ -45,6 +46,7 @@
     --watch:#8E2F82;
     --watch-deep:#F3E6F1;
     --steel:#2C6BB0;
+    --mena:#0E7A7A;
     --sel:#E4E1D8;
     --shadow:none;
     color-scheme:light;
@@ -68,6 +70,7 @@
   --watch:#8E2F82;
   --watch-deep:#F3E6F1;
   --steel:#2C6BB0;
+  --mena:#0E7A7A;
   --sel:#E4E1D8;
   --shadow:none;
   color-scheme:light;
@@ -85,6 +88,15 @@ a{color:inherit;text-decoration:none}
 button,input,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--amber);outline-offset:2px}
 .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* Urdu and Arabic headlines. IBM Plex has no Arabic-script glyphs, so Noto
+   Naskh carries them; dir=auto on the element flips the run to RTL without
+   disturbing the Latin rows around it. Arabic script sits small at a Latin
+   size, hence the nudge. */
+[dir]:lang(ur),[dir]:lang(ar),.rtl{
+  font-family:"Noto Naskh Arabic","IBM Plex Sans",serif;
+  font-size:1.06em;line-height:1.7;
+}
 
 /* ============ MASTHEAD ============ */
 .mast{
@@ -225,6 +237,21 @@ button,input,select{font:inherit;color:inherit}
 @media (prefers-color-scheme:light){
   :root:not([data-theme="dark"]) .watch-head .chip[aria-pressed="true"]{color:#FFF}
 }
+.spark-wrap{display:flex;align-items:center;gap:8px}
+.spark-k{
+  font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);
+}
+.spark{width:160px;height:26px;overflow:visible}
+.spark .area{fill:var(--watch);opacity:.16}
+.spark .line{fill:none;stroke:var(--watch);stroke-width:1.5;
+  stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.spark .tip{fill:var(--watch)}
+.spark-n{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;
+  color:var(--watch);font-variant-numeric:tabular-nums;
+}
+@media (max-width:860px){.spark-wrap{order:9}}
 .watch-split{
   margin-left:auto;display:flex;align-items:center;gap:12px;
   font-family:"IBM Plex Mono",monospace;font-size:11px;
@@ -233,6 +260,7 @@ button,input,select{font:inherit;color:inherit}
 .watch-split b{font-weight:600}
 .watch-split .pk{color:var(--jade)}
 .watch-split .intl{color:var(--steel)}
+.watch-split .mena{color:var(--mena)}
 .watch-toggle{
   background:transparent;border:1px solid var(--line);border-radius:2px;
   padding:5px 10px;cursor:pointer;color:var(--ink-3);
@@ -298,7 +326,22 @@ button,input,select{font:inherit;color:inherit}
 @media (max-width:860px){
   .watch-grid{grid-template-columns:1fr}
   .watch-col{border-right:0;border-bottom:1px solid var(--line-soft)}
-  .watch-split{width:100%;margin-left:0}
+  .spark-wrap{display:flex;align-items:center;gap:8px}
+.spark-k{
+  font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);
+}
+.spark{width:160px;height:26px;overflow:visible}
+.spark .area{fill:var(--watch);opacity:.16}
+.spark .line{fill:none;stroke:var(--watch);stroke-width:1.5;
+  stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.spark .tip{fill:var(--watch)}
+.spark-n{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;
+  color:var(--watch);font-variant-numeric:tabular-nums;
+}
+@media (max-width:860px){.spark-wrap{order:9}}
+.watch-split{width:100%;margin-left:0}
 }
 
 /* ============ DAILY BRIEF ============ */
@@ -450,6 +493,20 @@ button,input,select{font:inherit;color:inherit}
   letter-spacing:.09em;color:var(--ink-2);border:1px solid var(--line);
   border-radius:2px;padding:0 5px;
 }
+.r-lang{
+  font-family:"IBM Plex Mono",monospace;font-size:9px;font-weight:600;
+  letter-spacing:.1em;border:1px solid currentColor;border-radius:2px;padding:0 4px;
+  color:var(--ink-3);
+}
+.r-lang.UR{color:var(--jade)}
+.r-lang.AR{color:var(--mena)}
+.r-reg{
+  font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.12em;color:var(--ink-3);
+}
+.r-reg.PK{color:var(--jade)}
+.r-reg.MENA{color:var(--mena)}
+.r-reg.INTL{color:var(--steel)}
+.w-origin.MENA{color:var(--mena)}
 .r-topic{
   font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.14em;
   text-transform:uppercase;color:var(--ink-3);
@@ -524,7 +581,9 @@ body.compact .r-meta{margin-top:2px}
       <span class="stat"><span class="stat-k">World</span><span class="stat-v amber" id="sWorld">—</span></span>
       <span class="stat"><span class="stat-k">Pakistan</span><span class="stat-v jade" id="sPak">—</span></span>
       <span class="stat"><span class="stat-k">Sources</span><span class="stat-v" id="sSrc">—</span></span>
-      <span class="stat"><span class="stat-k">BZ watch 24h</span><span class="stat-v" id="sWatch" style="color:var(--watch)">—</span></span>
+      <span class="stat"><span class="stat-k">Zardari watch</span><span class="stat-v" id="sWatch" style="color:var(--watch)">—</span></span>
+      <span class="stat"><span class="stat-k">Urdu</span><span class="stat-v jade" id="sUrdu">—</span></span>
+      <span class="stat"><span class="stat-k">Arabic</span><span class="stat-v" id="sArabic" style="color:var(--mena)">—</span></span>
       <span class="stat"><span class="stat-k">Last pull</span><span class="stat-v" id="sPull">—</span></span>
       <span class="stat"><span class="stat-k">Karachi</span><span class="stat-v" id="sClock">—</span></span>
     </div>
@@ -581,8 +640,14 @@ body.compact .r-meta{margin-top:2px}
       <button class="chip" data-wwin="24" aria-pressed="true" type="button">24h</button>
       <button class="chip" data-wwin="168" aria-pressed="false" type="button">7d</button>
     </div>
+    <span class="spark-wrap" id="sparkWrap" hidden>
+      <span class="spark-k">7-day coverage</span>
+      <svg class="spark" id="spark" viewBox="0 0 160 26" preserveAspectRatio="none" aria-hidden="true"></svg>
+      <span class="spark-n" id="sparkN"></span>
+    </span>
     <div class="watch-split">
-      <span>Pakistani <b class="pk" id="wPK">0</b></span>
+      <span>Pakistan <b class="pk" id="wPK">0</b></span>
+      <span>Gulf &amp; MENA <b class="mena" id="wMENA">0</b></span>
       <span>International <b class="intl" id="wINTL">0</b></span>
       <button class="watch-toggle" id="wCollapse" type="button">Hide</button>
     </div>
@@ -633,7 +698,9 @@ body.compact .r-meta{margin-top:2px}
   <span>Feeds <b id="fFeeds">—</b></span>
   <span>Window <b>60h rolling</b></span>
   <span>Brief <b id="fBrief">&mdash;</b></span>
-  <span style="margin-left:auto">Headlines link to their publisher. Meridian stores nothing and ranks nothing — strict reverse chronology.</span>
+  <span>Sources <b id="fSrc">GDELT + RSS</b></span>
+  <span style="margin-left:auto">Headlines link to their publisher. Meridian stores nothing and ranks nothing.
+  News data courtesy of <a href="https://www.gdeltproject.org/" target="_blank" rel="noopener noreferrer" style="color:var(--ink-2);text-decoration:underline">The GDELT Project</a>.</span>
 </footer>
 
 <script>
@@ -649,8 +716,9 @@ const NEWS_DATA = {"generated":"1970-01-01T00:00:00Z","counts":{"total":0,"world
   "use strict";
   const ITEMS = NEWS_DATA.items.map(function(i){
     return {t:i.t,u:i.u,s:i.s,c:i.c,d:i.d,k:i.k,x:i.x||"",p:i.p||"",
-            w:i.w||[],o:i.o||"INTL",ms:i.ts?Date.parse(i.ts):0,
-            q:(i.t+" "+i.s+" "+(i.p||"")+" "+(i.x||"")).toLowerCase()};
+            w:i.w||[],o:i.o||"INTL",lang:i.lang||"",cty:i.cty||"",g:i.g||0,
+            ms:i.ts?Date.parse(i.ts):0,
+            q:(i.t+" "+i.s+" "+(i.p||"")+" "+(i.cty||"")+" "+(i.x||"")).toLowerCase()};
   });
   const PULL_MS = Date.parse(NEWS_DATA.generated);
   const PAGE = 60;
@@ -716,6 +784,23 @@ const NEWS_DATA = {"generated":"1970-01-01T00:00:00Z","counts":{"total":0,"world
     return true;
   }
 
+  const LANG_BADGE = {English:"EN",Urdu:"UR",Arabic:"AR",Hindi:"HI",Persian:"FA",
+    Turkish:"TR",Chinese:"ZH",French:"FR",Spanish:"ES",German:"DE",Russian:"RU",
+    Pashto:"PS",Bengali:"BN",Indonesian:"ID",Malay:"MS"};
+  const RTL = {Urdu:"ur",Arabic:"ar",Persian:"fa",Pashto:"ps"};
+
+  function langBits(it){
+    const code = LANG_BADGE[it.lang] || (it.lang ? it.lang.slice(0,2).toUpperCase() : "");
+    // Only badge a language when it is NOT English — an EN badge on every row
+    // is noise, but a UR or AR badge is the whole point.
+    return (code && code !== "EN")
+      ? '<span class="r-lang '+code+'">'+code+'</span>' : "";
+  }
+  function dirAttr(it){
+    const l = RTL[it.lang];
+    return l ? ' dir="auto" lang="'+l+'"' : "";
+  }
+
   const esc = (function(){
     const d = document.createElement("div");
     return function(s){ d.textContent = s; return d.innerHTML; };
@@ -727,10 +812,13 @@ const NEWS_DATA = {"generated":"1970-01-01T00:00:00Z","counts":{"total":0,"world
     return '<a class="'+cls+'" href="'+esc(it.u)+'" target="_blank" rel="noopener noreferrer">'
       + '<span class="r-time" title="'+esc(pkStamp(it.ms))+'">'+ago(it.ms)+'</span>'
       + '<span class="r-main">'
-      + '<span class="r-head">'+esc(it.t)+'</span>'
+      + '<span class="r-head"'+dirAttr(it)+'>'+esc(it.t)+'</span>'
       + '<span class="r-meta"><span class="r-src">'+esc(it.c)+'</span>'
+      + langBits(it)
       + '<span class="r-topic '+it.k+'">'+it.k+'</span>'
-      + '<span class="r-topic" style="letter-spacing:.05em">'+esc(it.s)+'</span></span>'
+      + '<span class="r-topic" style="letter-spacing:.05em">'+esc(it.p || it.s)+'</span>'
+      + (it.cty ? '<span class="r-reg '+it.o+'">'+esc(it.cty)+'</span>' : '')
+      + '</span>'
       + (it.x ? '<span class="r-sum">'+esc(it.x)+'</span>' : '')
       + '</span></a>';
   }
@@ -830,6 +918,29 @@ const NEWS_DATA = {"generated":"1970-01-01T00:00:00Z","counts":{"total":0,"world
     document.getElementById("briefBtn").classList.toggle("stale", age === null || age > 15);
   }
 
+  /* ---- coverage volume sparkline ---- */
+  function drawSpark(){
+    const wrap = document.getElementById("sparkWrap");
+    const series = (NEWS_DATA.volume || []).filter(function(p){ return p && p[1] != null; });
+    if(!wrap || series.length < 4){ return; }              // nothing honest to draw
+    const vals = series.map(function(p){ return Number(p[1]) || 0; });
+    const max = Math.max.apply(null, vals), min = Math.min.apply(null, vals);
+    const span = (max - min) || 1;
+    const W = 160, H = 26, n = vals.length;
+    const x = function(i){ return (i / (n - 1)) * W; };
+    const y = function(v){ return H - ((v - min) / span) * (H - 3) - 1.5; };
+    let d = "";
+    for(let i = 0; i < n; i++) d += (i ? "L" : "M") + x(i).toFixed(1) + " " + y(vals[i]).toFixed(1) + " ";
+    const area = "M0 " + H + " L" + d.slice(1).trim() + " L" + W + " " + H + " Z";
+    const svg = document.getElementById("spark");
+    svg.innerHTML = '<path class="area" d="'+area+'"/><path class="line" d="'+d.trim()+'"/>'
+      + '<circle class="tip" cx="'+x(n-1).toFixed(1)+'" cy="'+y(vals[n-1]).toFixed(1)+'" r="2"/>';
+    const last = vals[n-1];
+    document.getElementById("sparkN").textContent = last.toFixed(2);
+    svg.setAttribute("aria-label", "Coverage volume over 7 days, latest " + last.toFixed(2));
+    wrap.hidden = false;
+  }
+
   /* ---- Bhutto-Zardari watch ---- */
   function watchItems(){
     const cutoff = Date.now() - state.wwin*3600000;
@@ -842,10 +953,11 @@ const NEWS_DATA = {"generated":"1970-01-01T00:00:00Z","counts":{"total":0,"world
 
   function wRowHTML(it){
     return '<a class="w-row" href="'+esc(it.u)+'" target="_blank" rel="noopener noreferrer">'
-      + '<span class="w-head">'+esc(it.t)+'</span>'
+      + '<span class="w-head"'+dirAttr(it)+'>'+esc(it.t)+'</span>'
       + '<span class="w-meta">'
-      + '<span class="w-origin '+it.o+'">'+(it.o === "PK" ? "PK" : "INTL")+'</span>'
-      + '<span class="w-pub" title="'+esc(it.p || it.s)+'">'+esc(it.p || it.s)+'</span>'
+      + '<span class="w-origin '+it.o+'">'+esc(it.o)+'</span>'
+      + langBits(it)
+      + '<span class="w-pub" title="'+esc((it.cty? it.cty+" · ":"")+(it.p || it.s))+'">'+esc(it.p || it.s)+'</span>'
       + '<span class="w-time" title="'+esc(pkStamp(it.ms))+'">'+ago(it.ms)+'</span>'
       + '</span></a>';
   }
@@ -877,6 +989,7 @@ const NEWS_DATA = {"generated":"1970-01-01T00:00:00Z","counts":{"total":0,"world
     }
     grid.innerHTML = html;
     document.getElementById("wPK").textContent = list.filter(function(i){ return i.o === "PK"; }).length;
+    document.getElementById("wMENA").textContent = list.filter(function(i){ return i.o === "MENA"; }).length;
     document.getElementById("wINTL").textContent = list.filter(function(i){ return i.o === "INTL"; }).length;
     document.querySelectorAll("[data-wwin]").forEach(function(b){
       b.setAttribute("aria-pressed", String(Number(b.dataset.wwin) === state.wwin));
@@ -930,12 +1043,23 @@ const NEWS_DATA = {"generated":"1970-01-01T00:00:00Z","counts":{"total":0,"world
     document.getElementById("sWorld").textContent = NEWS_DATA.counts.world;
     document.getElementById("sPak").textContent = NEWS_DATA.counts.pakistan;
     document.getElementById("sSrc").textContent = NEWS_DATA.counts.sources;
-    document.getElementById("sWatch").textContent = NEWS_DATA.counts.watch24 != null ? NEWS_DATA.counts.watch24 : "—";
+    const cc = NEWS_DATA.counts;
+    document.getElementById("sWatch").textContent = cc.watch != null ? cc.watch : "—";
+    const su = document.getElementById("sUrdu"), sa = document.getElementById("sArabic");
+    if(su) su.textContent = cc.urdu != null ? cc.urdu : "—";
+    if(sa) sa.textContent = cc.arabic != null ? cc.arabic : "—";
     const a = ago(PULL_MS);
     document.getElementById("sPull").textContent = (a === "now" ? "just now" : a + " ago");
     document.getElementById("fPull").textContent = pkStamp(PULL_MS);
     document.getElementById("fNext").textContent = pkStamp(PULL_MS + 3600000);
     document.getElementById("fFeeds").textContent = NEWS_DATA.counts.feeds_ok+"/"+NEWS_DATA.counts.feeds_total+" responding";
+    const fs = document.getElementById("fSrc");
+    if(fs){
+      const st = NEWS_DATA.gdelt_status || {};
+      const cached = Object.keys(st).filter(function(k){ return st[k] === "cached"; });
+      fs.textContent = (cc.gdelt || 0) + " via GDELT, " + ((cc.total||0)-(cc.gdelt||0)) + " via RSS"
+        + (cached.length ? " · " + cached.length + " GDELT quer" + (cached.length>1?"ies":"y") + " served from cache" : "");
+    }
     const fb = document.getElementById("fBrief");
     if(fb) fb.textContent = SUMMARY && SUMMARY.written
       ? (SUMMARY.mode === "auto" ? "assembled " : "written ") + pkStamp(Date.parse(SUMMARY.written))
@@ -1062,6 +1186,7 @@ const NEWS_DATA = {"generated":"1970-01-01T00:00:00Z","counts":{"total":0,"world
     document.getElementById("watch").classList.contains("is-hidden") ? "Show" : "Hide";
   buildSources();
   buildTape();
+  drawSpark();
   syncChips();
   stats();
   clock();

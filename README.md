@@ -1,11 +1,16 @@
 # Meridian News Desk
 
-A self-hosting news terminal. Two equal desks — world wires on the left, a
-Pakistan desk on the right — plus a Bhutto–Zardari watch band and a written
-daily brief. It pulls 67 RSS feeds from roughly 60 publishers, rebuilds itself
-on a schedule, and deploys to GitHub Pages.
+A self-hosting news terminal built around a **Bhutto–Zardari watch** — Asif Ali
+Zardari, the Presidency, Bilawal and Aseefa — with world and Pakistan desks
+either side of it, and a daily brief.
+
+Coverage comes from **GDELT** (primary) and direct RSS (backup), in **English,
+Urdu and Arabic**. It rebuilds itself on a schedule and deploys to GitHub Pages.
 
 No server. No database. No API keys required. Free to run indefinitely.
+
+News data courtesy of [The GDELT Project](https://www.gdeltproject.org/), free
+for any use with attribution.
 
 ---
 
@@ -101,6 +106,36 @@ Hourly is still free on a public repo — Actions minutes are unmetered there.
 
 ---
 
+## Where the news comes from
+
+**GDELT is primary.** One query covers all four principals, and because GDELT
+matches against machine-translated text but returns the *original* headline,
+that single English query brings back Urdu, Hindi and Arabic coverage with
+native titles. That is why the watch needs one query rather than one per
+language, and why the name matcher in `sources.py` handles Arabic script as
+well as Latin.
+
+**Direct RSS is the backup layer** — Dawn, Geo, Tribune, ARY, Business Recorder,
+BBC, Guardian, NYT, Al Jazeera and others. These were the feeds that survived
+when Google News blocked GitHub's runners; every Google News query was dropped
+because all 26 of them died at once.
+
+### Two GDELT behaviours the code defends against
+
+**It soft-throttles with an empty 200, not a 429.** A query returning 53
+articles returned 0 an hour later, then worked again. So an empty live result is
+never treated as truth: it will not overwrite a cached payload, and the cached
+one is served instead. Without this the watch empties silently — which is
+exactly how it broke the first time.
+
+**Rate limits are real and undocumented.** The query budget is five per run,
+spaced, with exponential backoff. Results are cached in `data/`, which the
+workflow persists between runs via `actions/cache`, and a seed cache is
+committed so even a first run on a cold machine has something to show.
+
+The dashboard states its own provenance: the footer reports how many items came
+from GDELT versus RSS and how many queries were served from cache.
+
 ## The daily brief
 
 The Summary button opens a brief covering the last 24 hours in six sections:
@@ -153,7 +188,8 @@ python src/make_digest.py data/news_data.json 24
 
 | Path | What it is |
 |---|---|
-| `src/sources.py` | Feed registry, beat/watch/origin classifiers. Edit this to add feeds. |
+| `src/gdelt.py` | GDELT client — backoff, caching, and the empty-result guard. |
+| `src/sources.py` | GDELT queries, RSS registry, and the multilingual classifiers. |
 | `src/fetch_news.py` | Pulls every feed concurrently, dedupes, normalises. |
 | `src/make_digest.py` | Reduces a pull to a 24h digest grouped by section. |
 | `src/make_summary.py` | Produces the brief — assembled, or written when a key is set. |
@@ -186,6 +222,16 @@ headline.
 If a publisher batch-publishes opinion columns, cap its share in the `CAPS`
 dictionary in the same file, or it will crowd out reported news.
 
+### Tuning the GDELT queries
+
+`GDELT_QUERIES` in `src/sources.py` holds all five. Keep the list short — every
+query is a chance to be throttled. Two syntax rules learned the hard way:
+OR'd terms must be wrapped in parentheses, and operator-only queries return
+nothing, so always include at least one keyword.
+
+Anchor language queries in that language. `Pakistan sourcelang:arabic` matched
+loosely and returned Hormuz and Sudan stories; `"باكستان"` does not.
+
 ### Tracking a different person
 
 Add a name pattern to `classify_watch()` and an entry to `WATCH` in
@@ -197,6 +243,15 @@ and add the section to `SECTIONS` in both `make_digest.py` and `make_summary.py`
 ## How it decides things
 
 These rules are what stop the page from being a raw RSS dump.
+
+**Multilingual matching.** The watch matcher reads Latin, Urdu and Arabic
+script. Two traps are handled explicitly: Urdu writes زرداری with a different
+final ya than Arabic زرداري, and آصف (Asif) is a prefix of آصفہ (Aseefa), so
+Aseefa is tested first and Asif only counts when followed by علی/علي.
+
+**Relevance.** Anything on the Pakistan desk must name Pakistan or a principal
+in its headline, in any script. Without this, Arabic-language queries fill the
+desk with regional news that merely shares a search term.
 
 **Ordering.** Strict reverse chronology, with one adjustment: no publisher may
 take more than two consecutive rows. A paper that batch-publishes its opinion

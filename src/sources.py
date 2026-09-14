@@ -1,39 +1,27 @@
 """Source registry for the Global News Desk dashboard."""
 
-GN = "https://news.google.com/rss/search?q=when:24h+{q}&hl=en-US&gl=US&ceid=US:en"
-GNW = "https://news.google.com/rss/search?q=when:7d+{q}&hl=en-US&gl=US&ceid=US:en"
 
 # (name, short_code, url, desk, topic)
 # desk: WORLD | PAKISTAN     topic: politics | business | tech
 SOURCES = [
     # ---------------- WORLD :: POLITICS / GENERAL ----------------
-    ("Reuters",              "REUT", GN.format(q="source:Reuters"), "WORLD", "politics"),
-    ("Associated Press",     "AP",   GN.format(q="source:%22Associated+Press%22"), "WORLD", "politics"),
     ("BBC World",            "BBC",  "https://feeds.bbci.co.uk/news/world/rss.xml", "WORLD", "politics"),
     ("Al Jazeera",           "AJZ",  "https://www.aljazeera.com/xml/rss/all.xml", "WORLD", "politics"),
     ("The Guardian",         "GRD",  "https://www.theguardian.com/world/rss", "WORLD", "politics"),
     ("New York Times",       "NYT",  "https://rss.nytimes.com/services/xml/rss/nyt/World.xml", "WORLD", "politics"),
     ("Deutsche Welle",       "DW",   "https://rss.dw.com/rdf/rss-en-world", "WORLD", "politics"),
     ("France 24",            "F24",  "https://www.france24.com/en/rss", "WORLD", "politics"),
-    ("CNN",                  "CNN",  GN.format(q="source:CNN"), "WORLD", "politics"),
-    ("NPR",                  "NPR",  GN.format(q="source:NPR"), "WORLD", "politics"),
     ("Sky News",             "SKY",  "https://feeds.skynews.com/feeds/rss/world.xml", "WORLD", "politics"),
     ("The Independent",      "IND",  "https://www.independent.co.uk/news/world/rss", "WORLD", "politics"),
-    ("The Washington Post",  "WAPO", GN.format(q="source:%22The+Washington+Post%22"), "WORLD", "politics"),
     ("The Times of India",   "TOI",  "https://timesofindia.indiatimes.com/rssfeeds/296589292.cms", "WORLD", "politics"),
-    ("South China Morning Post", "SCMP", GN.format(q="source:%22South+China+Morning+Post%22"), "WORLD", "politics"),
 
     # ---------------- WORLD :: BUSINESS / MARKETS ----------------
     ("BBC Business",         "BBC",  "https://feeds.bbci.co.uk/news/business/rss.xml", "WORLD", "business"),
     ("Guardian Business",    "GRD",  "https://www.theguardian.com/uk/business/rss", "WORLD", "business"),
     ("NYT Business",         "NYT",  "https://rss.nytimes.com/services/xml/rss/nyt/Business.xml", "WORLD", "business"),
     ("CNBC Markets",         "CNBC", "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000664", "WORLD", "business"),
-    ("Bloomberg",            "BLM",  GN.format(q="source:Bloomberg"), "WORLD", "business"),
-    ("Financial Times",      "FT",   GN.format(q="source:%22Financial+Times%22"), "WORLD", "business"),
-    ("The Economist",        "ECON", GN.format(q="source:%22The+Economist%22"), "WORLD", "business"),
     ("MarketWatch",          "MW",   "https://feeds.content.dowjones.io/public/rss/mw_topstories", "WORLD", "business"),
     ("Yahoo Finance",        "YF",   "https://finance.yahoo.com/news/rssindex", "WORLD", "business"),
-    ("Al Jazeera Economy",   "AJZ",  GN.format(q="source:%22Al+Jazeera%22+(economy+OR+markets+OR+trade+OR+oil)"), "WORLD", "business"),
 
     # ---------------- WORLD :: TECH / AI ----------------
     ("BBC Technology",       "BBC",  "https://feeds.bbci.co.uk/news/technology/rss.xml", "WORLD", "tech"),
@@ -45,7 +33,6 @@ SOURCES = [
     ("Wired",                "WRD",  "https://www.wired.com/feed/rss", "WORLD", "tech"),
     ("MIT Tech Review",      "MIT",  "https://www.technologyreview.com/feed/", "WORLD", "tech"),
     ("Hacker News",          "HN",   "https://hnrss.org/frontpage", "WORLD", "tech"),
-    ("AI Wire",              "AIW",  GN.format(q="%22artificial+intelligence%22+OR+%22AI+model%22"), "WORLD", "tech"),
 
     # ---------------- PAKISTAN :: NATIONAL ----------------
     ("Dawn",                 "DAWN", "https://www.dawn.com/feeds/home", "PAKISTAN", "politics"),
@@ -65,27 +52,12 @@ SOURCES = [
     ("The News Business",    "NEWS", "https://www.thenews.com.pk/rss/1/3", "PAKISTAN", "business"),
     ("The Nation",           "NATN", "https://www.nation.com.pk/rss/latest", "PAKISTAN", "politics"),
     ("Bol News",             "BOL",  "https://www.bolnews.com/feed/", "PAKISTAN", "politics"),
-    ("Pakistan Today",       "PKT",  GN.format(q="source:%22Pakistan+Today%22"), "PAKISTAN", "politics"),
-    ("Samaa TV",             "SAMA", GN.format(q="source:%22Samaa+TV%22"), "PAKISTAN", "politics"),
-    ("Profit (Pakistan)",    "PRFT", GN.format(q="source:%22Profit+by+Pakistan+Today%22"), "PAKISTAN", "business"),
 
     # ---------------- PAKISTAN :: GLOBAL COVERAGE ----------------
-    ("Reuters on Pakistan",  "REUT", GN.format(q="Pakistan+source:Reuters"), "PAKISTAN", "politics"),
-    ("BBC on Pakistan",      "BBC",  GN.format(q="Pakistan+source:BBC"), "PAKISTAN", "politics"),
-    ("AP on Pakistan",       "AP",   GN.format(q="Pakistan+source:%22Associated+Press%22"), "PAKISTAN", "politics"),
-    ("Al Jazeera on Pakistan","AJZ", GN.format(q="Pakistan+source:%22Al+Jazeera%22"), "PAKISTAN", "politics"),
-    ("Global Pakistan Wire", "GLOB", GN.format(q="Pakistan"), "PAKISTAN", "politics"),
-    ("Pakistan Economy Wire","GLOB", GN.format(q="Pakistan+(economy+OR+IMF+OR+rupee+OR+inflation+OR+%22State+Bank%22+OR+PSX)"), "PAKISTAN", "business"),
-    ("Pakistan Tech Wire",   "GLOB", GN.format(q="Pakistan+(technology+OR+startup+OR+AI+OR+fintech+OR+IT+exports)"), "PAKISTAN", "tech"),
 
     # ---------------- BHUTTO-ZARDARI WATCH ----------------
     # These feeds surface candidates; membership in the watch band is decided
     # by whether the HEADLINE names a principal (see WATCH below).
-    ("Zardari Watch",        "AAZ",  GNW.format(q="%22Asif+Ali+Zardari%22+OR+%22President+Zardari%22"), "PAKISTAN", "politics"),
-    ("Bilawal Watch",        "BBZ",  GNW.format(q="%22Bilawal+Bhutto%22"), "PAKISTAN", "politics"),
-    ("Aseefa Watch",         "ABZ",  GNW.format(q="%22Aseefa+Bhutto%22+OR+%22Asifa+Bhutto%22"), "PAKISTAN", "politics"),
-    ("Bhutto-Zardari Wire",  "PPP",  GNW.format(q="%22Bhutto+Zardari%22"), "PAKISTAN", "politics"),
-    ("Presidency Wire",      "PPP",  GNW.format(q="%22President+of+Pakistan%22+OR+%22Aiwan-e-Sadr%22"), "PAKISTAN", "politics"),
 ]
 
 # Feeds that publish high-volume opinion/columns; keep their share small.
@@ -104,10 +76,28 @@ import re as _re
 # Matching on body text instead would fill the band with stories that merely
 # mention them in passing.
 # ---------------------------------------------------------------------------
+# Latin script
 _BBZ = _re.compile(r"\bBilawal\b", _re.I)
-_ABZ = _re.compile(r"\b(Aseefa|Asifa)\b", _re.I)
-_AAZ_EXPLICIT = _re.compile(r"\b(Asif\s+(Ali\s+)?Zardari|President\s+Zardari|Co-?Chairman\s+Zardari)\b", _re.I)
+_ABZ = _re.compile(r"\b(Aseefa|Asifa|Asefa)\b", _re.I)
+_AAZ_EXPLICIT = _re.compile(
+    r"\b(Asif\s+(Ali\s+)?Zardari|President\s+Zardari|Co-?Chairman\s+Zardari)\b", _re.I)
 _ZARDARI = _re.compile(r"\bZardari\b", _re.I)
+
+# Urdu and Arabic script.
+#
+# GDELT matches on machine translation but returns the ORIGINAL headline, so a
+# query written in English hands back Urdu and Arabic titles. Without these
+# patterns those articles reach the Pakistan desk and never reach the watch —
+# which would quietly gut the thing this dashboard exists for.
+#
+# Note the two forms of final ya: Urdu writes زرداری, Arabic writes زرداري.
+# Note also that آصف (Asif) is a prefix of آصفہ (Aseefa), so Aseefa is tested
+# first and Asif is only accepted when followed by علی / علي.
+_BBZ_NAT = _re.compile(r"بلاول")
+_ABZ_NAT = _re.compile(r"آصفہ|آصفة|آصفه|عاصفہ")
+_ZARDARI_NAT = _re.compile(r"زرداری|زرداري")
+_AAZ_NAT = _re.compile(r"آصف\s*عل[یي]|صدر\s*زرداری|الرئيس\s*زرداري")
+_PRES_NAT = _re.compile(r"صدر|الرئيس|ایوان\s*صدر|ایوانِ\s*صدر|رئاسة|رئيس\s*باكستان")
 
 # Presidential-office language. A Zardari story that speaks in these terms is
 # about the office; anything else about him is party or personal.
@@ -127,16 +117,21 @@ WATCH = [
 
 
 def classify_watch(title):
-    """Return the principals named in this headline, e.g. ['BBZ']."""
+    """Return the principals named in this headline, in any supported script."""
     hits = []
-    bbz = bool(_BBZ.search(title))
-    abz = bool(_ABZ.search(title))
-    # A bare "Zardari" with no first name is the President in normal usage.
-    aaz = bool(_AAZ_EXPLICIT.search(title)) or (
-        bool(_ZARDARI.search(title)) and not bbz and not abz)
+    bbz = bool(_BBZ.search(title) or _BBZ_NAT.search(title))
+    abz = bool(_ABZ.search(title) or _ABZ_NAT.search(title))
+
+    aaz_explicit = bool(_AAZ_EXPLICIT.search(title) or _AAZ_NAT.search(title))
+    bare_zardari = bool(_ZARDARI.search(title) or _ZARDARI_NAT.search(title))
+    # A bare "Zardari" with no first name is the President in normal usage,
+    # but when Bilawal or Aseefa is named the surname belongs to them.
+    aaz = aaz_explicit or (bare_zardari and not bbz and not abz)
+
     if aaz:
         # An act of the office reads as Presidency; the rest is Zardari politics.
-        hits.append("PRES" if _PRESIDENCY.search(title) else "AAZ")
+        office = bool(_PRESIDENCY.search(title)) or bool(_PRES_NAT.search(title))
+        hits.append("PRES" if office else "AAZ")
     if bbz:
         hits.append("BBZ")
     if abz:
@@ -186,6 +181,20 @@ PK_TERMS = _re.compile(
     r"pti|ppp|pml-?n|psx|kse-?100|rupee|state\s+bank|nadra|isi|"
     r"lord'?s|test\s+series)\b", _re.I)
 
+# The same test in Urdu and Arabic script. Without this, an Arabic-language
+# query for Pakistan returns regional stories — Hormuz, Sudan, Egypt — that
+# have nothing to do with Pakistan and would sit on the Pakistan desk as noise.
+PK_TERMS_NAT = _re.compile(
+    r"پاکستان|باكستان|باکستان|اسلام\s*آباد|إسلام\s*آباد|کراچی|كراتشي|"
+    r"لاہور|لاهور|پشاور|بلوچستان|سندھ|پنجاب|کشمیر|كشمير|"
+    r"زرداری|زرداري|بلاول|آصفہ|آصفة|عمران\s*خان|شہباز|شهباز")
+
+
+def is_pk_relevant(title):
+    """True when a headline actually concerns Pakistan, in any script."""
+    return bool(PK_TERMS.search(title) or PK_TERMS_NAT.search(title)
+                or classify_watch(title))
+
 
 def pk_relevant(title, feed_url, desk):
     """True unless this is a search-feed item on the Pakistan desk that never
@@ -193,3 +202,76 @@ def pk_relevant(title, feed_url, desk):
     if desk != "PAKISTAN" or "news.google.com" not in feed_url:
         return True
     return bool(PK_TERMS.search(title)) or bool(classify_watch(title))
+
+
+# ---------------------------------------------------------------------------
+# GDELT queries
+#
+# GDELT is now the primary source; the RSS list above is the backup layer.
+#
+# The key discovery that shapes this: GDELT matches against machine-translated
+# text but returns the ORIGINAL headline. One English query for the family
+# therefore brings back Urdu, Hindi and Arabic coverage with native titles —
+# which is why the watch needs only one query rather than one per language.
+#
+# Keep this list short. GDELT rate-limits hard, and every query is a chance to
+# be throttled. Five is the budget.
+#
+# (key, label, code, query, mode, timespan, desk, topic)
+# ---------------------------------------------------------------------------
+GDELT_QUERIES = [
+    # THE MAIN EVENT — all four principals in one query, all languages.
+    ("watch", "GDELT Zardari Watch", "GDLT",
+     '("Asif Ali Zardari" OR "Bilawal Bhutto" OR "Aseefa Bhutto" OR '
+     '"President Zardari" OR "Bhutto Zardari")',
+     "artlist", "7d", "PAKISTAN", "politics"),
+
+    # The family as the Arab press covers them.
+    ("watch_ar", "GDELT Watch (Arabic)", "GDAR",
+     '(Zardari OR Bilawal) sourcelang:arabic',
+     "artlist", "7d", "PAKISTAN", "politics"),
+
+    # Pakistani outlets, English and Urdu together.
+    ("pakistan", "GDELT Pakistan Desk", "GDPK",
+     'Pakistan sourcecountry:pakistan',
+     "artlist", "24h", "PAKISTAN", "politics"),
+
+    # Gulf / MENA coverage of Pakistan.
+    #
+    # Anchored on the ARABIC word for Pakistan. The English term plus a
+    # language filter matched loosely and returned Hormuz, Yemen and Egypt
+    # stories that had nothing to do with Pakistan.
+    ("gulf", "GDELT Gulf & MENA", "GDME",
+     '"باكستان"',
+     "artlist", "48h", "PAKISTAN", "politics"),
+
+    # Coverage volume for the watch sparkline (not articles).
+    ("volume", "GDELT Watch Volume", "GDVOL",
+     '("Asif Ali Zardari" OR "Bilawal Bhutto" OR "Aseefa Bhutto" OR "President Zardari")',
+     "timelinevol", "7d", None, None),
+]
+
+# Language label -> short badge shown on a row.
+LANG_BADGE = {
+    "English": "EN", "Urdu": "UR", "Arabic": "AR", "Hindi": "HI",
+    "Persian": "FA", "Turkish": "TR", "Chinese": "ZH", "French": "FR",
+    "Spanish": "ES", "German": "DE", "Russian": "RU", "Pashto": "PS",
+    "Bengali": "BN", "Indonesian": "ID", "Malay": "MS",
+}
+
+# Gulf / MENA source countries, for the regional tag.
+MENA = {
+    "United Arab Emirates", "Saudi Arabia", "Qatar", "Kuwait", "Bahrain",
+    "Oman", "Egypt", "Jordan", "Lebanon", "Iraq", "Syria", "Yemen",
+    "Palestinian Territory", "Israel", "Libya", "Tunisia", "Algeria",
+    "Morocco", "Sudan", "Iran", "Turkey",
+}
+
+
+def region_of(country, lang):
+    """PK | MENA | INTL — where a story is being told from."""
+    if country == "Pakistan":
+        return "PK"
+    if country in MENA or lang == "Arabic":
+        return "MENA"
+    return "INTL"

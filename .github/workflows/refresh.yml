@@ -38,6 +38,17 @@ jobs:
           python-version: "3.12"
           cache: pip
 
+      - name: Restore the rolling store and GDELT cache
+        # GDELT throttles unpredictably and answers a throttle with an empty
+        # 200, not a 429. Carrying data/ between runs means a throttled run
+        # serves the last good payload instead of an empty watch.
+        uses: actions/cache@v4
+        with:
+          path: data
+          key: meridian-store-${{ github.run_id }}
+          restore-keys: |
+            meridian-store-
+
       - name: Install dependencies
         run: pip install -r requirements.txt
 
@@ -45,7 +56,8 @@ jobs:
         if: env.HAS_API_KEY == 'true'
         run: pip install "anthropic>=0.40"
 
-      - name: Pull headlines
+      - name: Pull headlines (GDELT primary, RSS backup)
+        timeout-minutes: 25
         run: python src/fetch_news.py data/news_data.json
 
       - name: Refuse to deploy a degraded pull

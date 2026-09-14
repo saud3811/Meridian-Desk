@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """Fetch all sources concurrently and emit a normalized JSON payload."""
-import json, re, sys, time, html, hashlib
+import json, os, re, sys, time, html, hashlib
 from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor
 
 import feedparser
-from sources import SOURCES, CAPS, classify_watch, classify_origin, pk_relevant
+from sources import (SOURCES, CAPS, GDELT_QUERIES, classify_watch, classify_origin,
+                     pk_relevant, region_of, is_pk_relevant)
+import gdelt
 
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
 MAX_PER_FEED = 14
@@ -92,6 +94,10 @@ def pull(spec):
             "p": publisher,
             "w": classify_watch(title),
             "o": classify_origin(name, publisher),
+            "lang": "English",
+            "cty": "",
+            "img": "",
+            "g": 0,
         })
 
     # Some publishers stamp ahead of UTC. Shift the whole feed back by its own
@@ -141,12 +147,50 @@ def diversify(items, run=2):
     return out + held
 
 
+def collect_gdelt(cache_dir="data"):
+    """Run the GDELT query set. Returns (items, volume_series, status_by_key).
+
+    Never raises: a throttled or broken query falls back to its cache, and a
+    missing cache yields nothing rather than failing the build.
+    """
+    items, volume, status = [], [], {}
+    for i, (key, label, code, q, mode, timespan, desk, topic) in enumerate(GDELT_QUERIES):
+        if i:
+            time.sleep(gdelt.GAP)
+        payload, st = gdelt.query(q, key, mode=mode, timespan=timespan,
+                                  cache_dir=cache_dir)
+        status[key] = st
+        if mode == "timelinevol":
+            volume = gdelt.timeline_series(payload)
+            continue
+        rows = gdelt.to_items(payload, label, code, desk, topic)
+        kept = []
+        for r in rows:
+            r["w"] = classify_watch(r["t"])
+            r["o"] = region_of(r["cty"], r["lang"])
+            # A Pakistan-desk item must actually be about Pakistan. GDELT's
+            # language filters return plenty of regional news that merely
+            # shares a query, and it has no business on this desk.
+            if desk == "PAKISTAN" and not (r["w"] or is_pk_relevant(r["t"])):
+                continue
+            kept.append(r)
+        if len(kept) < len(rows):
+            print(f"    dropped {len(rows)-len(kept)} off-topic items from {key}")
+        items.extend(kept)
+    return items, volume, status
+
+
 def main():
+    print("GDELT (primary):")
+    g_items, g_volume, g_status = collect_gdelt()
+    print(f"  -> {len(g_items)} items, {sum(1 for i in g_items if i['w'])} naming a principal")
+
+    print("RSS (backup):")
     with ThreadPoolExecutor(max_workers=16) as ex:
         results = list(ex.map(pull, SOURCES))
 
     items, seen_url, seen_title = [], set(), set()
-    for chunk in results:
+    for chunk in [g_items] + results:
         for it in chunk:
             ukey = it["u"].split("?")[0]
             tkey = re.sub(r"[^a-z0-9]", "", it["t"].lower())[:70]
@@ -156,12 +200,48 @@ def main():
             seen_title.add(tkey)
             items.append(it)
 
+    # Rolling store. GDELT is intermittently empty and publishers rate-limit,
+    # so each run merges into the previous run's items rather than replacing
+    # them. Anything older than the window is pruned below.
+    out_path = sys.argv[1] if len(sys.argv) > 1 else "news_data.json"
+    carried = 0
+    if os.path.exists(out_path):
+        try:
+            prev = json.load(open(out_path, encoding="utf-8"))
+            for it in prev.get("items", []):
+                uk = it["u"].split("?")[0]
+                tk = re.sub(r"[^a-z0-9]", "", it["t"].lower())[:70]
+                if uk in seen_url or (tk and tk in seen_title):
+                    continue
+                # Re-apply current rules to carried items, so tightening a
+                # filter cleans out history instead of only affecting new pulls.
+                if (it.get("d") == "PAKISTAN" and not it.get("w")
+                        and not is_pk_relevant(it["t"])):
+                    continue
+                seen_url.add(uk); seen_title.add(tk)
+                items.append(it); carried += 1
+        except Exception as e:
+            print(f"  (no usable previous store: {e})")
+    print(f"carried forward {carried} items from the previous run")
+
+    # Prune: 60h for the desks, 7 days for watch items (they are sparse).
+    now_utc = datetime.now(timezone.utc)
+    def _age_h(it):
+        if not it.get("ts"):
+            return 1e9
+        try:
+            return (now_utc - datetime.fromisoformat(it["ts"].replace("Z", "+00:00"))).total_seconds() / 3600
+        except Exception:
+            return 1e9
+    items = [i for i in items if _age_h(i) <= (168 if i.get("w") else 60)]
+
     items = [reclassify(i) for i in items]
     items.sort(key=lambda i: i["ts"] or "", reverse=True)
     items = diversify([i for i in items if i["d"] == "WORLD"]) + \
             diversify([i for i in items if i["d"] == "PAKISTAN"])
 
     live = sorted({i["s"] for i in items})
+    g_n = sum(1 for i in items if i.get("g"))
     payload = {
         "generated": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
         "counts": {
@@ -175,7 +255,14 @@ def main():
             "watch": sum(1 for i in items if i["w"]),
             "feeds_ok": sum(1 for r in results if r),
             "feeds_total": len(SOURCES),
+            "gdelt": g_n,
+            "mena": sum(1 for i in items if i.get("o") == "MENA"),
+            "urdu": sum(1 for i in items if i.get("lang") == "Urdu"),
+            "arabic": sum(1 for i in items if i.get("lang") == "Arabic"),
         },
+        "gdelt_status": g_status,
+        "volume": g_volume,
+        "attribution": gdelt.ATTRIBUTION,
         "items": items,
     }
     out = sys.argv[1] if len(sys.argv) > 1 else "news_data.json"
