@@ -220,29 +220,32 @@ def pk_relevant(title, feed_url, desk):
 # (key, label, code, query, mode, timespan, desk, topic)
 # ---------------------------------------------------------------------------
 GDELT_QUERIES = [
-    # THE MAIN EVENT — all four principals in one query, all languages.
+    # THE MAIN EVENT — all four principals, all languages, one query.
     ("watch", "GDELT Zardari Watch", "GDLT",
      '("Asif Ali Zardari" OR "Bilawal Bhutto" OR "Aseefa Bhutto" OR '
      '"President Zardari" OR "Bhutto Zardari")',
      "artlist", "7d", "PAKISTAN", "politics"),
 
-    # The family as the Arab press covers them.
-    ("watch_ar", "GDELT Watch (Arabic)", "GDAR",
-     '(Zardari OR Bilawal) sourcelang:arabic',
+    # The same names written in Urdu and Arabic script. GDELT indexes the
+    # original text as well as the translation, so this reaches coverage the
+    # English query can miss.
+    ("watch_native", "GDELT Watch (Urdu/Arabic)", "GDNA",
+     '("زرداری" OR "زرداري" OR "بلاول" OR "آصفہ بھٹو" OR "آصف علی زرداری")',
      "artlist", "7d", "PAKISTAN", "politics"),
 
-    # Pakistani outlets, English and Urdu together.
+    # Pakistani coverage. Deliberately NO sourcecountry: operator — see below.
     ("pakistan", "GDELT Pakistan Desk", "GDPK",
-     'Pakistan sourcecountry:pakistan',
+     '("Pakistan" OR "Islamabad" OR "Karachi" OR "Lahore")',
      "artlist", "24h", "PAKISTAN", "politics"),
 
-    # Gulf / MENA coverage of Pakistan.
-    #
-    # Anchored on the ARABIC word for Pakistan. The English term plus a
-    # language filter matched loosely and returned Hormuz, Yemen and Egypt
-    # stories that had nothing to do with Pakistan.
+    # Urdu-language Pakistani coverage, queried in Urdu.
+    ("pakistan_ur", "GDELT Pakistan (Urdu)", "GDUR",
+     '("پاکستان" OR "اسلام آباد" OR "کراچی" OR "لاہور")',
+     "artlist", "24h", "PAKISTAN", "politics"),
+
+    # Gulf / MENA, queried in Arabic.
     ("gulf", "GDELT Gulf & MENA", "GDME",
-     '"باكستان"',
+     '("باكستان" OR "الباكستاني")',
      "artlist", "48h", "PAKISTAN", "politics"),
 
     # Coverage volume for the watch sparkline (not articles).
@@ -250,6 +253,19 @@ GDELT_QUERIES = [
      '("Asif Ali Zardari" OR "Bilawal Bhutto" OR "Aseefa Bhutto" OR "President Zardari")',
      "timelinevol", "7d", None, None),
 ]
+
+# NOTE ON QUERY SHAPE — learned from a live deploy, not from documentation.
+#
+# In one run, from one IP, within seconds of each other:
+#     ("Asif Ali Zardari" OR ...)            -> 57 records   (no operator)
+#     Pakistan sourcecountry:pakistan        ->  0 records   (term + operator)
+#     (Zardari OR Bilawal) sourcelang:arabic ->  0 records   (term + operator)
+#
+# Queries that pair a search term with a sourcecountry:/sourcelang: operator
+# come back empty. Plain keyword and quoted-phrase queries work. So this list
+# uses NO operators at all: every article GDELT returns already carries its
+# language and source country, and the pipeline filters on those fields
+# instead. Slightly more data over the wire, far fewer silent zeroes.
 
 # Language label -> short badge shown on a row.
 LANG_BADGE = {

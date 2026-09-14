@@ -205,6 +205,10 @@ button,input,select{font:inherit;color:inherit}
 .chip:last-child{border-right:0}
 .chip:hover{background:var(--sel);color:var(--ink)}
 .chip[aria-pressed="true"]{background:var(--amber);color:#0A0E13;font-weight:600}
+.chip.lang-ur,.chip.lang-ar{font-family:"Noto Naskh Arabic","IBM Plex Mono",monospace;font-size:13px;letter-spacing:0}
+.chip.lang-ur[aria-pressed="true"]{background:var(--jade);color:#0A0E13}
+.chip.lang-ar[aria-pressed="true"]{background:var(--mena);color:#0A0E13}
+.chip[data-lang][aria-pressed="true"][data-lang="nonen"]{background:var(--steel);color:#0A0E13}
 #srcSel{
   background:var(--ground);border:1px solid var(--line);border-radius:2px;
   padding:6px 8px;font-family:"IBM Plex Mono",monospace;font-size:11px;max-width:190px;
@@ -608,6 +612,13 @@ body.compact .r-meta{margin-top:2px}
     <button class="chip" data-topic="business" aria-pressed="false" type="button">Business</button>
     <button class="chip" data-topic="tech" aria-pressed="false" type="button">Tech</button>
   </div>
+  <div class="grp" role="group" aria-label="Language">
+    <span class="grp-k">Lang</span>
+    <button class="chip" data-lang="all" aria-pressed="true" type="button">All</button>
+    <button class="chip lang-ur" data-lang="Urdu" aria-pressed="false" type="button">اردو</button>
+    <button class="chip lang-ar" data-lang="Arabic" aria-pressed="false" type="button">عربي</button>
+    <button class="chip" data-lang="nonen" aria-pressed="false" type="button">Non-EN</button>
+  </div>
   <div class="grp" role="group" aria-label="Time window">
     <span class="grp-k">Window</span>
     <button class="chip" data-win="1" aria-pressed="false" type="button">1h</button>
@@ -637,8 +648,8 @@ body.compact .r-meta{margin-top:2px}
     <span class="watch-note">Pakistani &amp; international media</span>
     <div class="grp" role="group" aria-label="Watch window">
       <span class="grp-k">Window</span>
-      <button class="chip" data-wwin="24" aria-pressed="true" type="button">24h</button>
-      <button class="chip" data-wwin="168" aria-pressed="false" type="button">7d</button>
+      <button class="chip" data-wwin="24" aria-pressed="false" type="button">24h</button>
+      <button class="chip" data-wwin="168" aria-pressed="true" type="button">7d</button>
     </div>
     <span class="spark-wrap" id="sparkWrap" hidden>
       <span class="spark-k">7-day coverage</span>
@@ -723,8 +734,15 @@ const NEWS_DATA = {"generated":"1970-01-01T00:00:00Z","counts":{"total":0,"world
   const PULL_MS = Date.parse(NEWS_DATA.generated);
   const PAGE = 60;
 
-  const state = {topic:"all", win:0, src:"all", q:"", shown:{WORLD:PAGE, PAKISTAN:PAGE},
-                 desk:"WORLD", wwin:24, wopen:{AAZ:false,PRES:false,BBZ:false,ABZ:false}};
+  const state = {topic:"all", win:0, src:"all", q:"", lang:"all",
+                 shown:{WORLD:PAGE, PAKISTAN:PAGE},
+                 desk:"WORLD", wwin:168, wopen:{AAZ:false,PRES:false,BBZ:false,ABZ:false}};
+
+  function langPass(it){
+    if(state.lang === "all") return true;
+    if(state.lang === "nonen") return it.lang && it.lang !== "English";
+    return it.lang === state.lang;
+  }
 
   const PRINCIPALS = [
     {k:"AAZ",  name:"Asif Ali Zardari",       role:"PPP co-chairman & politics"},
@@ -742,6 +760,7 @@ const NEWS_DATA = {"generated":"1970-01-01T00:00:00Z","counts":{"total":0,"world
       if(p.topic) state.topic = p.topic;
       if(typeof p.win === "number") state.win = p.win;
       if(typeof p.wwin === "number") state.wwin = p.wwin;
+      if(p.lang) state.lang = p.lang;
       if(p.watchHidden) document.getElementById("watch").classList.add("is-hidden");
       if(p.theme) document.documentElement.setAttribute("data-theme", p.theme);
       if(p.compact) document.body.classList.add("compact");
@@ -750,7 +769,7 @@ const NEWS_DATA = {"generated":"1970-01-01T00:00:00Z","counts":{"total":0,"world
   function savePrefs(){
     try{
       localStorage.setItem("meridian.prefs", JSON.stringify({
-        topic:state.topic, win:state.win, wwin:state.wwin,
+        topic:state.topic, win:state.win, wwin:state.wwin, lang:state.lang,
         watchHidden:document.getElementById("watch").classList.contains("is-hidden"),
         theme:document.documentElement.getAttribute("data-theme")||"",
         compact:document.body.classList.contains("compact")
@@ -781,6 +800,7 @@ const NEWS_DATA = {"generated":"1970-01-01T00:00:00Z","counts":{"total":0,"world
     if(state.src !== "all" && it.s !== state.src) return false;
     if(state.win && it.ms && (Date.now()-it.ms) > state.win*3600000) return false;
     if(state.q && it.q.indexOf(state.q) === -1) return false;
+    if(!langPass(it)) return false;
     return true;
   }
 
@@ -947,6 +967,7 @@ const NEWS_DATA = {"generated":"1970-01-01T00:00:00Z","counts":{"total":0,"world
     return ITEMS.filter(function(i){
       if(!i.w.length || !i.ms || i.ms < cutoff) return false;
       if(state.q && i.q.indexOf(state.q) === -1) return false;
+      if(!langPass(i)) return false;
       return true;
     }).sort(function(a,b){ return b.ms - a.ms; });
   }
@@ -1033,6 +1054,21 @@ const NEWS_DATA = {"generated":"1970-01-01T00:00:00Z","counts":{"total":0,"world
     document.querySelectorAll("[data-win]").forEach(function(b){
       b.setAttribute("aria-pressed", String(Number(b.dataset.win) === state.win));
     });
+    document.querySelectorAll("[data-lang]").forEach(function(b){
+      b.setAttribute("aria-pressed", String(b.dataset.lang === state.lang));
+    });
+    // Disable a language chip when nothing in the data is in that language,
+    // so an empty result reads as "no coverage" rather than a broken filter.
+    document.querySelectorAll("[data-lang]").forEach(function(b){
+      const v = b.dataset.lang;
+      if(v === "all") return;
+      const n = v === "nonen"
+        ? ITEMS.filter(function(i){ return i.lang && i.lang !== "English"; }).length
+        : ITEMS.filter(function(i){ return i.lang === v; }).length;
+      b.disabled = n === 0;
+      b.style.opacity = n === 0 ? .35 : 1;
+      b.title = n + " item" + (n === 1 ? "" : "s");
+    });
   }
 
   function resetPages(){ state.shown.WORLD = PAGE; state.shown.PAKISTAN = PAGE; }
@@ -1076,6 +1112,11 @@ const NEWS_DATA = {"generated":"1970-01-01T00:00:00Z","counts":{"total":0,"world
       state.wwin = Number(wchip.dataset.wwin);
       state.wopen = {AAZ:false,PRES:false,BBZ:false,ABZ:false};
       renderWatch(); savePrefs(); return;
+    }
+    const lchip = e.target.closest("[data-lang]");
+    if(lchip){
+      state.lang = lchip.dataset.lang;
+      syncChips(); resetPages(); render(); savePrefs(); return;
     }
     const chip = e.target.closest("[data-topic],[data-win]");
     if(chip){
@@ -1142,7 +1183,7 @@ const NEWS_DATA = {"generated":"1970-01-01T00:00:00Z","counts":{"total":0,"world
   }
 
   document.getElementById("resetBtn").addEventListener("click", function(){
-    state.topic="all"; state.win=0; state.src="all"; state.q="";
+    state.topic="all"; state.win=0; state.src="all"; state.q=""; state.lang="all";
     document.getElementById("search").value=""; document.getElementById("srcSel").value="all";
     syncChips(); resetPages(); render(); savePrefs();
   });
